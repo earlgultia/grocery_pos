@@ -1358,3 +1358,201 @@ body.landing-page::before {
 .btn-block {
     width: 100%;
 }
+
+/* Shared mobile dashboard/layout overrides */
+@media (max-width: 900px) {
+    body .dashboard-container {
+        display: block !important;
+        min-height: auto !important;
+    }
+
+    body .sidebar {
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        transform: none !important;
+        margin: 0 0 1rem !important;
+        z-index: auto !important;
+    }
+
+    body .sidebar.open {
+        transform: none !important;
+    }
+
+    body .sidebar-menu {
+        padding: 0.75rem !important;
+    }
+
+    body .sidebar-menu a {
+        width: 100% !important;
+        justify-content: flex-start !important;
+        min-height: 48px;
+    }
+
+    body .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 1rem !important;
+    }
+
+    body .page-shell,
+    body .panel {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    body .page-shell,
+    body .panel,
+    body .stat-card,
+    body .feature-card,
+    body .pricing-card,
+    body .profile-card,
+    body .form-card {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    body .panel-header,
+    body .section-toolbar,
+    body .table-toolbar,
+    body .top-bar,
+    body .hero-actions,
+    body .form-actions,
+    body .row-actions,
+    body .action-group,
+    body .bulk-actions,
+    body .sidebar-footer-actions,
+    body .auth-actions,
+    body .search-bar,
+    body .landing-nav {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.75rem !important;
+    }
+
+    body .hero-buttons,
+    body .landing-hero-panel,
+    body .stats-grid,
+    body .layout-grid,
+    body .profile-grid,
+    body .create-store-grid,
+    body .form-grid,
+    body .quick-grid,
+    body .hero-stats,
+    body .features-grid,
+    body .pricing-grid,
+    body .steps,
+    body .category-list {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 0.9rem !important;
+    }
+
+    body .hero-content h1 {
+        font-size: 2rem !important;
+        line-height: 1.12 !important;
+    }
+
+    body .section-header h2,
+    body .cta h2,
+    body .page-title,
+    body .panel-header h2 {
+        font-size: 1.35rem !important;
+    }
+
+    body .btn,
+    body .btn-block,
+    body .hero-actions .btn,
+    body .form-actions .btn,
+    body .auth-actions .btn,
+    body .table-toolbar .btn,
+    body .sidebar-footer-actions a,
+    body .search-bar button,
+    body .search-bar a,
+    body .row-actions .btn-action,
+    body .row-actions a,
+    body .action-group .btn,
+    body .action-group a {
+        width: 100% !important;
+    }
+
+    body .search-bar input,
+    body .search-bar select,
+    body .search-bar button,
+    body .search-bar a,
+    body .form-group input,
+    body .form-group select,
+    body .form-group textarea,
+    body .checkout-field input,
+    body .checkout-field select {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    body .table-wrap,
+    body .products-table,
+    body .transaction-table,
+    body .cart-table,
+    body .table-responsive {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body th,
+    body td {
+        white-space: nowrap;
+    }
+
+    body .cart-card {
+        position: static !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    body .top-bar {
+        padding: 0.85rem 1rem !important;
+    }
+
+    body .pagination {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 0.5rem !important;
+    }
+
+    body .pagination a {
+        min-width: 2.25rem;
+        text-align: center;
+    }
+
+    body .category-dropdown-panel {
+        position: static !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin-top: 0.75rem !important;
+    }
+
+    body .category-dropdown-panel::before {
+        display: none !important;
+    }
+
+    body .category-dropdown-panel .category-list,
+    body .category-list {
+        grid-template-columns: 1fr !important;
+    }
+
+    body .sidebar-footer-actions a,
+    body .sidebar-menu a,
+    body .category-chip,
+    body .row-actions .btn-action,
+    body .action-group a,
+    body .action-group button {
+        border-radius: 0.85rem !important;
+    }
+}
