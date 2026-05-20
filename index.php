@@ -48,13 +48,24 @@ try {
                 </div>
             </div>
 
-            <nav class="landing-nav" aria-label="Primary">
-                <a href="#features"><span class="label">Features</span><span class="tag">Explore</span></a>
-                <a href="#how-it-works"><span class="label">How It Works</span><span class="tag">3 steps</span></a>
-                <a href="#pricing"><span class="label">Pricing</span><span class="tag">Plans</span></a>
-                <a href="#testimonials"><span class="label">Testimonials</span><span class="tag">Reviews</span></a>
-                <a href="login.php" class="primary-link"><span class="label">Login</span><span class="tag">Quick access</span></a>
-            </nav>
+            <div class="landing-nav-wrap">
+                <button type="button" class="landing-nav-toggle" aria-expanded="false" aria-controls="landingNavMenu">
+                    <span class="landing-nav-toggle-lines" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                    <span class="landing-nav-toggle-text">Menu</span>
+                </button>
+
+                <nav id="landingNavMenu" class="landing-nav" aria-label="Primary">
+                    <a href="#features"><span class="label">Features</span><span class="tag">Explore</span></a>
+                    <a href="#how-it-works"><span class="label">How It Works</span><span class="tag">3 steps</span></a>
+                    <a href="#pricing"><span class="label">Pricing</span><span class="tag">Plans</span></a>
+                    <a href="#testimonials"><span class="label">Testimonials</span><span class="tag">Reviews</span></a>
+                    <a href="login.php" class="primary-link"><span class="label">Login</span><span class="tag">Quick access</span></a>
+                </nav>
+            </div>
         </div>
     </header>
 
