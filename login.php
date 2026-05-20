@@ -72,10 +72,6 @@ $csrf_token = generateCSRFToken();
                     </div>
                 </div>
 
-                <div class="auth-demo">
-                    Store: store@example.com / password123 | Admin: admin@example.com / password123
-                </div>
-
                 <?php if ($error): ?>
                     <div class="auth-alert">
                         <?php echo htmlspecialchars($error); ?>
