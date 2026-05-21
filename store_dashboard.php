@@ -149,6 +149,10 @@ for ($i = 6; $i >= 0; $i--) {
             display: flex;
             min-height: 100vh;
         }
+
+        .sidebar-backdrop {
+            display: none;
+        }
         
         .sidebar {
             width: 280px;
@@ -234,6 +238,16 @@ for ($i = 6; $i >= 0; $i--) {
         
         .top-bar {
             display: none;
+        }
+
+        .dashboard-hero {
+            display: none;
+        }
+
+        .dashboard-panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
         }
         
         .stats-grid {
@@ -420,44 +434,274 @@ for ($i = 6; $i >= 0; $i--) {
         }
 
         @media (max-width: 768px) {
+            .dashboard-container {
+                min-height: auto;
+            }
+
             .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s;
-                z-index: 1000;
+                width: min(88vw, 320px);
+                height: 100vh;
+                transform: translateX(-105%);
+                transition: transform 0.28s ease;
+                z-index: 1002;
+                border-radius: 0 1.5rem 1.5rem 0;
+                box-shadow: 18px 0 44px rgba(15, 23, 42, 0.24);
             }
             
             .sidebar.open {
                 transform: translateX(0);
             }
+
+            .sidebar-backdrop {
+                display: block;
+                position: fixed;
+                inset: 0;
+                background: rgba(15, 23, 42, 0.34);
+                backdrop-filter: blur(8px);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.28s ease;
+                z-index: 1001;
+            }
+
+            .sidebar.open ~ .sidebar-backdrop {
+                opacity: 1;
+                pointer-events: auto;
+            }
             
             .main-content {
                 margin-left: 0;
+                padding: 0.85rem;
+            }
+
+            .top-bar {
+                display: flex;
+                position: sticky;
+                top: 0.75rem;
+                z-index: 1000;
+                align-items: center;
+                justify-content: space-between;
+                gap: 0.75rem;
+                padding: 0.95rem 1rem;
+                margin-bottom: 1rem;
+                border: 1px solid var(--dash-border);
+                border-radius: 1.05rem;
+                background: rgba(255, 255, 255, 0.9);
+                box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+                backdrop-filter: blur(16px);
+            }
+
+            .dashboard-menu-btn {
+                width: 2.75rem;
+                height: 2.75rem;
+                border: 1px solid rgba(15, 23, 42, 0.10);
+                border-radius: 0.9rem;
+                background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+                box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+                display: inline-grid;
+                place-items: center;
+                cursor: pointer;
+                flex: 0 0 auto;
+            }
+
+            .dashboard-menu-lines {
+                display: inline-grid;
+                gap: 0.2rem;
+                width: 1rem;
+            }
+
+            .dashboard-menu-lines span {
+                display: block;
+                height: 2px;
+                border-radius: 999px;
+                background: #0f172a;
+            }
+
+            .top-bar-copy {
+                min-width: 0;
+                flex: 1 1 auto;
+            }
+
+            .top-bar-copy p {
+                margin: 0;
+                font-size: 0.72rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: var(--dash-muted);
+            }
+
+            .top-bar-copy h2 {
+                margin: 0.15rem 0 0;
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 1.05rem;
+                letter-spacing: -0.03em;
+                color: var(--dash-text);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .top-bar span {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0.42rem 0.72rem;
+                border-radius: 999px;
+                background: rgba(79, 70, 229, 0.08);
+                color: #4338ca;
+                font-size: 0.76rem;
+                font-weight: 700;
+                white-space: nowrap;
+            }
+
+            .dashboard-hero {
+                display: grid;
+                gap: 1rem;
+                margin-bottom: 1rem;
                 padding: 1rem;
+                border-radius: 1.2rem;
+                background:
+                    radial-gradient(circle at top right, rgba(34, 197, 94, 0.12), transparent 28%),
+                    linear-gradient(135deg, rgba(255,255,255,0.96), rgba(255,255,255,0.88));
+                border: 1px solid var(--dash-border);
+                box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08);
+                backdrop-filter: blur(14px);
+            }
+
+            .dashboard-hero-badge {
+                display: inline-flex;
+                width: fit-content;
+                align-items: center;
+                padding: 0.4rem 0.7rem;
+                border-radius: 999px;
+                background: rgba(79, 70, 229, 0.08);
+                color: #4338ca;
+                font-size: 0.72rem;
+                font-weight: 700;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+            }
+
+            .dashboard-hero-copy h1 {
+                margin: 0.75rem 0 0.4rem;
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 1.4rem;
+                line-height: 1.15;
+                letter-spacing: -0.04em;
+                color: var(--dash-text);
+            }
+
+            .dashboard-hero-copy p {
+                margin: 0;
+                color: var(--dash-muted);
+                font-size: 0.94rem;
+            }
+
+            .dashboard-hero-actions {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.65rem;
+            }
+
+            .dashboard-action {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 2.85rem;
+                padding: 0.75rem 0.95rem;
+                border-radius: 0.95rem;
+                border: 1px solid var(--dash-border);
+                background: rgba(255,255,255,0.92);
+                color: var(--dash-text);
+                text-decoration: none;
+                font-size: 0.9rem;
+                font-weight: 700;
+                box-shadow: 0 8px 18px rgba(15, 23, 42, 0.05);
+            }
+
+            .dashboard-action-primary {
+                grid-column: 1 / -1;
+                border-color: transparent;
+                background: linear-gradient(135deg, #4f46e5, #4338ca);
+                color: #fff;
+                box-shadow: 0 14px 26px rgba(79, 70, 229, 0.22);
             }
 
             .stats-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+            }
+
+            .stats-grid .stat-card:last-child {
+                grid-column: 1 / -1;
+            }
+
+            .stat-card {
+                padding: 1rem;
+                border-radius: 1rem;
+            }
+
+            .stat-title {
+                font-size: 0.72rem;
+                letter-spacing: 0.07em;
+                margin-bottom: 0.35rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .stat-icon {
+                top: 0.85rem;
+                right: 0.85rem;
+                font-size: 1.45rem;
             }
 
             .chart-container,
             .recent-section {
                 padding: 1rem;
+                border-radius: 1rem;
+                margin-bottom: 0.85rem;
             }
 
-            .top-bar {
-                padding: 0.9rem 1rem;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
+            .dashboard-panels {
+                grid-template-columns: 1fr;
+                gap: 0.85rem;
             }
 
             .transaction-table {
                 overflow-x: auto;
             }
 
+            .transaction-table th,
+            .transaction-table td {
+                padding: 0.62rem 0.5rem;
+                font-size: 0.86rem;
+            }
+
             .product-list li {
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .product-stock {
+                display: block;
+                margin-bottom: 0.25rem;
+            }
+
+            .recent-section a {
+                display: inline-flex;
+                align-items: center;
+                margin-left: 0 !important;
+                margin-top: 0.15rem;
+            }
+
+            .section-title {
+                font-size: 1rem;
+                margin-bottom: 0.85rem;
             }
         }
     </style>
@@ -465,7 +709,7 @@ for ($i = 6; $i >= 0; $i--) {
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar" id="dashboardSidebar">
             <div class="sidebar-header">
                 <h3>🛒 <?php echo htmlspecialchars($store['store_name']); ?></h3>
                 <p><?php echo htmlspecialchars($user['name']); ?></p>
@@ -495,13 +739,37 @@ for ($i = 6; $i >= 0; $i--) {
                 </a>
             </div>
         </div>
+        <div class="sidebar-backdrop" aria-hidden="true" onclick="toggleSidebar(false)"></div>
 
         <!-- Main Content -->
         <div class="main-content">
             <div class="top-bar">
-                <h2>Dashboard</h2>
+                <button type="button" class="dashboard-menu-btn" aria-label="Toggle menu" aria-controls="dashboardSidebar" aria-expanded="false" onclick="toggleSidebar()">
+                    <span class="dashboard-menu-lines" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </button>
+                <div class="top-bar-copy">
+                    <p><?php echo htmlspecialchars($store['store_name']); ?></p>
+                    <h2>Dashboard</h2>
+                </div>
                 <div>
                     <span><?php echo date('F j, Y'); ?></span>
+                </div>
+            </div>
+
+            <div class="dashboard-hero">
+                <div class="dashboard-hero-copy">
+                    <div class="dashboard-hero-badge">Mobile-ready overview</div>
+                    <h1>Welcome back, <?php echo htmlspecialchars($user['name']); ?></h1>
+                    <p>Keep sales, stock, and restock alerts close at hand with quick actions below.</p>
+                </div>
+                <div class="dashboard-hero-actions">
+                    <a href="pos.php" class="dashboard-action dashboard-action-primary">Open POS</a>
+                    <a href="products_management.php" class="dashboard-action">Products</a>
+                    <a href="sales_report.php" class="dashboard-action">Reports</a>
                 </div>
             </div>
 
@@ -547,7 +815,7 @@ for ($i = 6; $i >= 0; $i--) {
                 <canvas id="salesChart" height="100"></canvas>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="dashboard-panels">
                 <!-- Recent Transactions -->
                 <div class="recent-section">
                     <div class="section-title">Recent Transactions</div>
@@ -634,9 +902,37 @@ for ($i = 6; $i >= 0; $i--) {
         });
 
         // Mobile menu toggle
-        function toggleSidebar() {
-            document.querySelector('.sidebar').classList.toggle('open');
+        function toggleSidebar(forceState) {
+            const sidebar = document.querySelector('.sidebar');
+            const shouldOpen = typeof forceState === 'boolean' ? forceState : !sidebar.classList.contains('open');
+            sidebar.classList.toggle('open', shouldOpen);
+            document.body.style.overflow = shouldOpen ? 'hidden' : '';
+
+            const menuButton = document.querySelector('.dashboard-menu-btn');
+            if (menuButton) {
+                menuButton.setAttribute('aria-expanded', String(shouldOpen));
+            }
         }
+
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    toggleSidebar(false);
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                toggleSidebar(false);
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                toggleSidebar(false);
+            }
+        });
     </script>
 </body>
 </html>
