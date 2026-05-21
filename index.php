@@ -319,7 +319,7 @@ try {
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>2026, &copy; 2024 Grocery POS System. All rights reserved.</p>
+                <p>&copy; 2026 Grocery POS System. All rights reserved.</p>
             </div>
         </div>
     </footer>
