@@ -33,7 +33,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo SITE_NAME; ?> — Modern Grocery POS & Store Management</title>
     <meta name="description" content="Complete POS system for grocery stores. Manage inventory, track sales, and handle transactions efficiently.">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=<?php echo filemtime(__DIR__ . '/css/style.css'); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
 </head>
@@ -49,7 +49,7 @@ try {
             </div>
 
             <div class="landing-nav-wrap">
-                <button type="button" class="landing-nav-toggle" aria-expanded="false" aria-controls="landingNavMenu">
+                <button type="button" class="landing-nav-toggle" aria-expanded="false" aria-controls="landingNavMenu" aria-label="Toggle navigation">
                     <span class="landing-nav-toggle-lines" aria-hidden="true">
                         <span></span>
                         <span></span>
@@ -326,6 +326,6 @@ try {
 
     </main>
 
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=<?php echo filemtime(__DIR__ . '/js/main.js'); ?>"></script>
 </body>
 </html>

@@ -317,6 +317,14 @@ function initLandingNavToggle() {
 
     const setState = (isOpen) => {
         navMenu.classList.toggle('is-open', isOpen);
+        if (isOpen) {
+            document.documentElement.classList.add('landing-nav-open');
+            document.documentElement.style.overflow = 'hidden';
+        } else {
+            document.documentElement.classList.remove('landing-nav-open');
+            document.documentElement.style.overflow = '';
+        }
+        document.body.style.overflow = '';
         toggleButton.setAttribute('aria-expanded', String(isOpen));
 
         if (toggleText) {
