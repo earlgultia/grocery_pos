@@ -319,7 +319,7 @@ try {
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 <?php echo SITE_NAME; ?>. All rights reserved.</p>
+                <p>2026, &copy; 2024 Grocery POS System. All rights reserved.</p>
             </div>
         </div>
     </footer>
