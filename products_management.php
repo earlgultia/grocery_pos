@@ -1410,5 +1410,6 @@ function productStatusLabel(array $product): array
             }
         });
     </script>
+    <script src="js/app-nav.js"></script>
 </body>
 </html>

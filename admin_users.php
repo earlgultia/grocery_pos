@@ -459,5 +459,6 @@ $csrfToken = generateCSRFToken();
             </div>
         </main>
     </div>
+    <script src="js/app-nav.js"></script>
 </body>
 </html>

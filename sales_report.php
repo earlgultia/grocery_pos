@@ -597,5 +597,6 @@ function buildQueryString(array $params): string
             }
         });
     </script>
+    <script src="js/app-nav.js"></script>
 </body>
 </html>

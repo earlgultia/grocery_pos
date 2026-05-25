@@ -996,5 +996,6 @@ for ($i = 6; $i >= 0; $i--) {
             }
         });
     </script>
+    <script src="js/app-nav.js"></script>
 </body>
 </html>

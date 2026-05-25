@@ -837,5 +837,6 @@ function buildQueryString(array $params): string
 
         renderCart();
     </script>
+    <script src="js/app-nav.js"></script>
 </body>
 </html>

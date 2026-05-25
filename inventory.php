@@ -612,5 +612,6 @@ function buildQueryString(array $params): string
             </div>
         </div>
     </div>
+    <script src="js/app-nav.js"></script>
 </body>
 </html>

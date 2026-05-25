@@ -521,5 +521,6 @@ $csrfToken = generateCSRFToken();
             });
         });
     </script>
+    <script src="js/app-nav.js"></script>
 </body>
 </html>
