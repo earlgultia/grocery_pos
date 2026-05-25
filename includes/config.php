@@ -25,8 +25,59 @@ function appSessionPath() {
     return null;
 }
 
+class AppFileSessionHandler implements SessionHandlerInterface {
+    private $path;
+
+    public function __construct($path) {
+        $this->path = rtrim($path, DIRECTORY_SEPARATOR);
+    }
+
+    public function open($savePath, $sessionName): bool {
+        return is_dir($this->path) || @mkdir($this->path, 0777, true);
+    }
+
+    public function close(): bool {
+        return true;
+    }
+
+    public function read($id): string {
+        $file = $this->getSessionFile($id);
+        if (!is_file($file)) {
+            return '';
+        }
+
+        $data = @file_get_contents($file);
+        return $data === false ? '' : $data;
+    }
+
+    public function write($id, $data): bool {
+        $file = $this->getSessionFile($id);
+        return @file_put_contents($file, $data, LOCK_EX) !== false;
+    }
+
+    public function destroy($id): bool {
+        $file = $this->getSessionFile($id);
+        return !is_file($file) || @unlink($file);
+    }
+
+    public function gc($maxLifetime): int|false {
+        $deleted = 0;
+        foreach (glob($this->path . DIRECTORY_SEPARATOR . 'sess_*') ?: [] as $file) {
+            if (is_file($file) && filemtime($file) + $maxLifetime < time() && @unlink($file)) {
+                $deleted++;
+            }
+        }
+        return $deleted;
+    }
+
+    private function getSessionFile($id): string {
+        $safeId = preg_replace('/[^a-zA-Z0-9,-]/', '', $id);
+        return $this->path . DIRECTORY_SEPARATOR . 'sess_' . $safeId;
+    }
+}
+
 if (session_status() === PHP_SESSION_ACTIVE) {
-    @session_write_close();
+    @session_abort();
 }
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -38,7 +89,10 @@ if (session_status() === PHP_SESSION_NONE) {
 if ($sessionPath !== null) {
     ini_set('session.save_handler', 'files');
     ini_set('session.save_path', $sessionPath);
+    ini_set('session.use_strict_mode', '1');
+    ini_set('session.cookie_httponly', '1');
     session_save_path($sessionPath);
+    session_set_save_handler(new AppFileSessionHandler($sessionPath), true);
 }
 
 if (session_status() === PHP_SESSION_NONE) {
