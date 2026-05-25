@@ -1,18 +1,49 @@
 <?php
 // includes/config.php
-if (session_status() === PHP_SESSION_NONE) {
-    $sessionPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'sessions';
+function appSessionPath() {
+    $paths = [
+        dirname(__DIR__) . DIRECTORY_SEPARATOR . 'sessions',
+        rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'grocery_pos_sessions'
+    ];
 
-    if (!is_dir($sessionPath)) {
-        mkdir($sessionPath, 0777, true);
+    foreach ($paths as $path) {
+        if (!is_dir($path)) {
+            @mkdir($path, 0777, true);
+        }
+
+        if (!is_dir($path)) {
+            continue;
+        }
+
+        $testFile = $path . DIRECTORY_SEPARATOR . '.session_write_test';
+        if (@file_put_contents($testFile, 'ok') !== false) {
+            @unlink($testFile);
+            return $path;
+        }
     }
 
-    if (is_dir($sessionPath) && is_writable($sessionPath)) {
-        session_save_path($sessionPath);
-    }
+    return null;
 }
 
-session_start();
+if (session_status() === PHP_SESSION_ACTIVE) {
+    @session_write_close();
+}
+
+if (session_status() === PHP_SESSION_NONE) {
+    $sessionPath = appSessionPath();
+} else {
+    $sessionPath = null;
+}
+
+if ($sessionPath !== null) {
+    ini_set('session.save_handler', 'files');
+    ini_set('session.save_path', $sessionPath);
+    session_save_path($sessionPath);
+}
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Database configuration for MySQL in XAMPP
 define('DB_HOST', 'localhost');
