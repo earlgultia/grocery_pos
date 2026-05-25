@@ -88,14 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $db->beginTransaction();
 
-                    if (!empty($hasStoreEmail)) {
-                        $stmt = $db->prepare('INSERT INTO stores (store_name, is_active, store_email) VALUES (?, 1, ?)');
-                        $stmt->execute([$storeName, $email]);
-                    } else {
-                        $stmt = $db->prepare('INSERT INTO stores (store_name, is_active) VALUES (?, 1)');
-                        $stmt->execute([$storeName]);
-                    }
-                    $storeId = $db->lastInsertId();
+                    $storeId = insertStoreRecord($storeName, $email);
 
                     $stmt = $db->prepare('INSERT INTO users (name, email, password, role, store_id) VALUES (?, ?, ?, ?, ?)');
                     $stmt->execute([
@@ -113,9 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($db->inTransaction()) {
                     $db->rollBack();
                 }
-                // Surface DB errors for local debugging and log activity
                 $formError = 'Unable to create store user account right now. Please try again.';
-                $formError .= ' (DB: ' . $e->getMessage() . ')';
                 if (function_exists('logActivity') && isset($_SESSION['user_id'])) {
                     logActivity($_SESSION['user_id'], 'error', 'Create store user failed: ' . $e->getMessage());
                 }
@@ -131,6 +122,7 @@ $csrfToken = generateCSRFToken();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?php echo htmlspecialchars($csrfToken); ?>">
     <title>Create Store User - <?php echo htmlspecialchars(SITE_NAME); ?></title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -216,6 +208,7 @@ $csrfToken = generateCSRFToken();
             </div>
         </main>
     </div>
+    <script src="js/main.js"></script>
 </body>
     
 </html>

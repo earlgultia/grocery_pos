@@ -317,6 +317,7 @@ function initLandingNavToggle() {
 
     const setState = (isOpen) => {
         navMenu.classList.toggle('is-open', isOpen);
+        toggleButton.classList.toggle('is-open', isOpen);
         if (isOpen) {
             document.documentElement.classList.add('landing-nav-open');
             document.documentElement.style.overflow = 'hidden';

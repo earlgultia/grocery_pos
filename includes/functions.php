@@ -74,6 +74,56 @@ function verifyPassword($password, $hash) {
     return password_verify($password, $hash);
 }
 
+function getTableColumns($tableName) {
+    static $columnsByTable = [];
+
+    if (!preg_match('/^[a-zA-Z0-9_]+$/', $tableName)) {
+        return [];
+    }
+
+    if (isset($columnsByTable[$tableName])) {
+        return $columnsByTable[$tableName];
+    }
+
+    try {
+        $stmt = getDB()->query("SHOW COLUMNS FROM `{$tableName}`");
+        $columnsByTable[$tableName] = array_column($stmt->fetchAll(PDO::FETCH_ASSOC), 'Field');
+    } catch (PDOException $e) {
+        $columnsByTable[$tableName] = [];
+    }
+
+    return $columnsByTable[$tableName];
+}
+
+function insertStoreRecord($storeName, $storeEmail = '', $phone = '', $address = '') {
+    $columns = getTableColumns('stores');
+    $data = ['store_name' => $storeName];
+
+    if (in_array('store_email', $columns, true)) {
+        $data['store_email'] = $storeEmail;
+    }
+
+    if (in_array('phone', $columns, true)) {
+        $data['phone'] = $phone;
+    }
+
+    if (in_array('address', $columns, true)) {
+        $data['address'] = $address;
+    }
+
+    if (in_array('is_active', $columns, true)) {
+        $data['is_active'] = 1;
+    }
+
+    $fieldList = implode(', ', array_map(fn($field) => "`{$field}`", array_keys($data)));
+    $placeholders = implode(', ', array_fill(0, count($data), '?'));
+
+    $stmt = getDB()->prepare("INSERT INTO stores ({$fieldList}) VALUES ({$placeholders})");
+    $stmt->execute(array_values($data));
+
+    return getDB()->lastInsertId();
+}
+
 function ensureDefaultDemoAccount() {
     try {
         $db = getDB();
@@ -94,9 +144,7 @@ function ensureDefaultDemoAccount() {
         $storeId = $stmt->fetchColumn();
 
         if (!$storeId) {
-            $stmt = $db->prepare("INSERT INTO stores (store_name, is_active) VALUES (?, 1)");
-            $stmt->execute([$demoStoreName]);
-            $storeId = $db->lastInsertId();
+            $storeId = insertStoreRecord($demoStoreName, $demoEmail);
         }
 
         if ($existingUserId) {

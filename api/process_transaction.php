@@ -1,46 +1,83 @@
 <?php
+require_once '../includes/functions.php';
 require_once '../includes/db_connect.php';
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
 
 header('Content-Type: application/json');
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'store_user') {
+if (!isset($_SESSION['user_id'], $_SESSION['user_role']) || $_SESSION['user_role'] !== 'store_user') {
+    http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit();
 }
 
 $data = json_decode(file_get_contents('php://input'), true);
+$allowedPaymentMethods = ['cash', 'card', 'other', 'gcash', 'maya', 'bank_transfer'];
 
 try {
+    if (!is_array($data)) {
+        throw new Exception('Invalid transaction data.');
+    }
+
+    if (empty($data['items']) || !is_array($data['items'])) {
+        throw new Exception('Add at least one product to complete the sale.');
+    }
+
+    $paymentMethod = $data['payment_method'] ?? '';
+    if (!in_array($paymentMethod, $allowedPaymentMethods, true)) {
+        throw new Exception('Invalid payment method.');
+    }
+
     $db = getDB();
     
-    // Start transaction
     $db->beginTransaction();
     
-    // Get store_id
-    $stmt = $db->prepare("SELECT store_id FROM users WHERE id = ?");
+    $stmt = $db->prepare("SELECT store_id FROM users WHERE id = ? AND role = 'store_user'");
     $stmt->execute([$_SESSION['user_id']]);
     $store_id = $stmt->fetchColumn();
+
+    if (!$store_id) {
+        throw new Exception('Store account not found.');
+    }
     
-    // Calculate subtotal and attach product metadata
     $subtotal = 0;
     foreach ($data['items'] as $index => $item) {
-        $stmt = $db->prepare("SELECT price, name FROM products WHERE id = ?");
-        $stmt->execute([$item['product_id']]);
+        $productId = isset($item['product_id']) ? (int)$item['product_id'] : 0;
+        $quantity = isset($item['quantity']) ? (float)$item['quantity'] : 0;
+
+        if ($productId <= 0 || $quantity <= 0) {
+            throw new Exception('Invalid cart item.');
+        }
+
+        $stmt = $db->prepare("SELECT id, price, name, quantity FROM products WHERE id = ? AND store_id = ? FOR UPDATE");
+        $stmt->execute([$productId, $store_id]);
         $product = $stmt->fetch();
 
         if (!$product) {
-            throw new Exception('Product not found for item ID: ' . $item['product_id']);
+            throw new Exception('Product not found for item ID: ' . $productId);
         }
 
-        $subtotal += $product['price'] * $item['quantity'];
+        if ((float)$product['quantity'] < $quantity) {
+            throw new Exception('Insufficient stock for ' . $product['name'] . '.');
+        }
+
+        $subtotal += (float)$product['price'] * $quantity;
+        $data['items'][$index]['product_id'] = $productId;
+        $data['items'][$index]['quantity'] = $quantity;
         $data['items'][$index]['product_name'] = $product['name'];
-        $data['items'][$index]['unit_price'] = $product['price'];
+        $data['items'][$index]['unit_price'] = (float)$product['price'];
     }
+
+    $tax = max(0, (float)($data['tax'] ?? 0));
+    $discount = max(0, (float)($data['discount'] ?? 0));
+    $totalAmount = max(0, $subtotal + $tax - $discount);
+    $paymentReceived = (float)($data['payment_received'] ?? 0);
+
+    if ($paymentReceived < $totalAmount) {
+        throw new Exception('Payment received must cover the total amount.');
+    }
+
+    $changeAmount = $paymentReceived - $totalAmount;
     
-    // Create transaction
     $stmt = $db->prepare("
         INSERT INTO transactions (store_id, user_id, customer_name, subtotal, tax, discount, total_amount, payment_received, change_amount, payment_method, status)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'completed')
@@ -49,14 +86,14 @@ try {
     $stmt->execute([
         $store_id,
         $_SESSION['user_id'],
-        $data['customer_name'],
+        sanitizeInput($data['customer_name'] ?? 'Walk-in customer') ?: 'Walk-in customer',
         $subtotal,
-        $data['tax'],
-        $data['discount'],
-        $data['total_amount'],
-        $data['payment_received'],
-        $data['change_amount'],
-        $data['payment_method']
+        $tax,
+        $discount,
+        $totalAmount,
+        $paymentReceived,
+        $changeAmount,
+        $paymentMethod
     ]);
     
     $transaction_id = $db->lastInsertId();
@@ -66,7 +103,6 @@ try {
     $stmt->execute([$transaction_id]);
     $invoice_number = $stmt->fetchColumn();
     
-    // Insert transaction items and update stock
     foreach ($data['items'] as $item) {
         $stmt = $db->prepare("
             INSERT INTO transaction_items (transaction_id, product_id, product_name, quantity, unit_price, subtotal)
@@ -80,10 +116,6 @@ try {
             $item['unit_price'],
             $item['unit_price'] * $item['quantity']
         ]);
-        
-        // Update stock
-        $stmt = $db->prepare("UPDATE products SET quantity = quantity - ? WHERE id = ?");
-        $stmt->execute([$item['quantity'], $item['product_id']]);
     }
     
     $db->commit();
@@ -91,11 +123,14 @@ try {
     echo json_encode([
         'success' => true,
         'invoice_number' => $invoice_number,
-        'change' => $data['change_amount']
+        'change' => $changeAmount
     ]);
     
 } catch(Exception $e) {
-    $db->rollBack();
+    if (isset($db) && $db->inTransaction()) {
+        $db->rollBack();
+    }
+    http_response_code(400);
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
 ?>

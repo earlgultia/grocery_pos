@@ -656,6 +656,12 @@ function buildQueryString(array $params): string
             return '$' + value.toFixed(2);
         }
 
+        function escapeHtml(value) {
+            const div = document.createElement('div');
+            div.textContent = value;
+            return div.innerHTML;
+        }
+
         function findCartItem(productId) {
             return cart.find(item => item.product_id === productId);
         }
@@ -678,7 +684,8 @@ function buildQueryString(array $params): string
                     name,
                     price,
                     quantity: 1,
-                    unit
+                    unit,
+                    stock
                 };
                 cart.push(cartItem);
             }
@@ -707,12 +714,14 @@ function buildQueryString(array $params): string
             cart.forEach(item => {
                 const lineTotal = item.price * item.quantity;
                 subtotal += lineTotal;
+                const itemName = escapeHtml(item.name);
+                const itemUnit = escapeHtml(item.unit);
 
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>
-                        <div class="product-name">${item.name}</div>
-                        <div class="product-meta">${item.unit}</div>
+                        <div class="product-name">${itemName}</div>
+                        <div class="product-meta">${itemUnit}</div>
                     </td>
                     <td>
                         <div class="quantity-control">
@@ -739,7 +748,7 @@ function buildQueryString(array $params): string
         function updateQuantity(productId, delta) {
             const item = findCartItem(productId);
             if (!item) return;
-            item.quantity = Math.max(1, item.quantity + delta);
+            item.quantity = Math.min(item.stock, Math.max(1, item.quantity + delta));
             renderCart();
         }
 
