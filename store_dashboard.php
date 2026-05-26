@@ -761,13 +761,13 @@ for ($i = 6; $i >= 0; $i--) {
         <div class="main-content">
             <!-- Mobile Top Bar (visible only on mobile) -->
             <div class="mobile-top-bar">
-                <div class="menu-toggle-btn" id="mobileMenuToggle">
+                <button type="button" class="menu-toggle-btn" id="mobileMenuToggle" aria-label="Open sidebar menu" aria-controls="dashboardSidebar" aria-expanded="false">
                     <div class="menu-icon">
                         <span></span>
                         <span></span>
                         <span></span>
                     </div>
-                </div>
+                </button>
                 <div class="top-bar-info">
                     <p>Store Dashboard</p>
                     <h2><?php echo htmlspecialchars($store['store_name']); ?></h2>
@@ -924,7 +924,7 @@ for ($i = 6; $i >= 0; $i--) {
             }
         });
 
-        // Mobile Menu Toggle (pure JS, no conflict with app-nav.js)
+        // Mobile menu toggle for the store dashboard sidebar.
         const sidebar = document.getElementById('dashboardSidebar');
         const backdrop = document.getElementById('sidebarBackdrop');
         const menuToggle = document.getElementById('mobileMenuToggle');
@@ -933,6 +933,10 @@ for ($i = 6; $i >= 0; $i--) {
             if (sidebar && backdrop) {
                 sidebar.classList.remove('open');
                 backdrop.classList.remove('active');
+                if (menuToggle) {
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    menuToggle.setAttribute('aria-label', 'Open sidebar menu');
+                }
                 document.body.style.overflow = '';
             }
         }
@@ -941,6 +945,10 @@ for ($i = 6; $i >= 0; $i--) {
             if (sidebar && backdrop) {
                 sidebar.classList.add('open');
                 backdrop.classList.add('active');
+                if (menuToggle) {
+                    menuToggle.setAttribute('aria-expanded', 'true');
+                    menuToggle.setAttribute('aria-label', 'Close sidebar menu');
+                }
                 document.body.style.overflow = 'hidden';
             }
         }
@@ -987,6 +995,5 @@ for ($i = 6; $i >= 0; $i--) {
             }
         });
     </script>
-    <script src="js/app-nav.js"></script>
 </body>
 </html>
