@@ -768,7 +768,7 @@ for ($i = 6; $i >= 0; $i--) {
         }
     </style>
 </head>
-<body>
+<body class="store-dashboard-page">
     <div class="dashboard-container">
         <!-- Sidebar -->
         <div class="sidebar" id="dashboardSidebar">
@@ -801,27 +801,10 @@ for ($i = 6; $i >= 0; $i--) {
                 </a>
             </div>
         </div>
-        <div class="sidebar-backdrop" aria-hidden="true" onclick="toggleSidebar(false)"></div>
+        <div class="sidebar-backdrop" aria-hidden="true"></div>
 
         <!-- Main Content -->
         <div class="main-content">
-            <div class="top-bar">
-                <button type="button" class="dashboard-menu-btn" aria-label="Toggle menu" aria-controls="dashboardSidebar" aria-expanded="false" onclick="toggleSidebar()">
-                    <span class="dashboard-menu-lines" aria-hidden="true">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </span>
-                </button>
-                <div class="top-bar-copy">
-                    <p><?php echo htmlspecialchars($store['store_name']); ?></p>
-                    <h2>Dashboard</h2>
-                </div>
-                <div>
-                    <span><?php echo date('F j, Y'); ?></span>
-                </div>
-            </div>
-
             <div class="dashboard-hero">
                 <div class="dashboard-hero-copy">
                     <div class="dashboard-hero-badge">Mobile-ready overview</div>
@@ -960,39 +943,6 @@ for ($i = 6; $i >= 0; $i--) {
                         position: 'top',
                     }
                 }
-            }
-        });
-
-        // Mobile menu toggle
-        function toggleSidebar(forceState) {
-            const sidebar = document.querySelector('.sidebar');
-            const shouldOpen = typeof forceState === 'boolean' ? forceState : !sidebar.classList.contains('open');
-            sidebar.classList.toggle('open', shouldOpen);
-            document.body.style.overflow = shouldOpen ? 'hidden' : '';
-
-            const menuButton = document.querySelector('.dashboard-menu-btn');
-            if (menuButton) {
-                menuButton.setAttribute('aria-expanded', String(shouldOpen));
-            }
-        }
-
-        document.querySelectorAll('.sidebar-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    toggleSidebar(false);
-                }
-            });
-        });
-
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                toggleSidebar(false);
-            }
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                toggleSidebar(false);
             }
         });
     </script>
