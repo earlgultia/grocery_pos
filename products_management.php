@@ -222,7 +222,7 @@ if ($statusFilter !== '') {
     } elseif ($statusFilter === 'out_of_stock') {
         $where[] = 'quantity = 0';
     } elseif ($statusFilter === 'expired') {
-        $where[] = 'expiration_date IS NOT NULL AND expiration_date <> "" AND expiration_date < CURDATE()';
+        $where[] = "expiration_date IS NOT NULL AND expiration_date <> '0000-00-00' AND expiration_date < CURDATE()";
     } elseif ($statusFilter === 'in_stock') {
         $where[] = 'quantity > low_stock_threshold';
     }

@@ -1938,6 +1938,15 @@ body.landing-page::before {
     body .quick-card {
         text-align: left !important;
     }
+
+    body.landing-page .hero-stats {
+        justify-items: center !important;
+    }
+
+    body.landing-page .hero-stats .stat,
+    body.landing-page .hero-stats .stat-label {
+        text-align: center !important;
+    }
 }
 
 /* Mobile navigation refinement */

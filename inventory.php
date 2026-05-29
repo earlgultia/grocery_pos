@@ -63,9 +63,9 @@ if ($statusFilter !== '') {
     } elseif ($statusFilter === 'out_of_stock') {
         $where[] = 'quantity = 0';
     } elseif ($statusFilter === 'expired') {
-        $where[] = 'expiration_date IS NOT NULL AND expiration_date <> "" AND expiration_date < CURDATE()';
+        $where[] = "expiration_date IS NOT NULL AND expiration_date <> '0000-00-00' AND expiration_date < CURDATE()";
     } elseif ($statusFilter === 'in_stock') {
-        $where[] = 'quantity > low_stock_threshold AND (expiration_date IS NULL OR expiration_date = "" OR expiration_date >= CURDATE())';
+        $where[] = "quantity > low_stock_threshold AND (expiration_date IS NULL OR expiration_date = '0000-00-00' OR expiration_date >= CURDATE())";
     }
 }
 
@@ -83,7 +83,7 @@ $stmt = $db->prepare('SELECT COUNT(*) FROM products WHERE store_id = ? AND quant
 $stmt->execute([$store['id']]);
 $outOfStockCount = (int)$stmt->fetchColumn();
 
-$stmt = $db->prepare('SELECT COUNT(*) FROM products WHERE store_id = ? AND expiration_date IS NOT NULL AND expiration_date <> "" AND expiration_date <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)');
+$stmt = $db->prepare("SELECT COUNT(*) FROM products WHERE store_id = ? AND expiration_date IS NOT NULL AND expiration_date <> '0000-00-00' AND expiration_date <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)");
 $stmt->execute([$store['id']]);
 $expiringSoonCount = (int)$stmt->fetchColumn();
 
