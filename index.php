@@ -201,7 +201,7 @@ try {
             <div class="pricing-grid">
                 <div class="pricing-card">
                     <h3>Basic</h3>
-                    <div class="price">$29<span>/month</span></div>
+                    <div class="price">₱499<span>/month</span></div>
                     <ul>
                         <li>✓ Up to 500 products</li>
                         <li>✓ Single store</li>
@@ -213,7 +213,7 @@ try {
                 <div class="pricing-card popular">
                     <div class="popular-badge">Most Popular</div>
                     <h3>Professional</h3>
-                    <div class="price">$79<span>/month</span></div>
+                    <div class="price">₱2,000<span>/3 months</span></div>
                     <ul>
                         <li>✓ Unlimited products</li>
                         <li>✓ Up to 5 stores</li>
