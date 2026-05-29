@@ -83,7 +83,7 @@ $stmt = $db->prepare('SELECT COUNT(*) FROM products WHERE store_id = ? AND quant
 $stmt->execute([$store['id']]);
 $outOfStockCount = (int)$stmt->fetchColumn();
 
-$stmt = $db->prepare("SELECT COUNT(*) FROM products WHERE store_id = ? AND expiration_date IS NOT NULL AND expiration_date <> '0000-00-00' AND expiration_date <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)");
+$stmt = $db->prepare("SELECT COUNT(*) FROM products WHERE store_id = ? AND expiration_date IS NOT NULL AND expiration_date >= CURDATE() AND expiration_date <= DATE_ADD(CURDATE(), INTERVAL 7 DAY)");
 $stmt->execute([$store['id']]);
 $expiringSoonCount = (int)$stmt->fetchColumn();
 
