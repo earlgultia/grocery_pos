@@ -485,18 +485,102 @@ function buildQueryString(array $params): string
         }
 
         @media (max-width: 768px) {
-            .main-content {
-                margin-left: 0;
+            .dashboard-container {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100% !important;
+                position: static !important;
+                height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+                box-shadow: none;
+            }
+
+            .sidebar-header {
                 padding: 1rem;
+            }
+
+            .sidebar-menu {
+                padding: 0.75rem;
+            }
+
+            .sidebar-menu a {
+                margin-bottom: 0.45rem;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                padding: 1rem;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .search-bar,
             .hero-actions {
                 flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-bar input,
+            .search-bar select,
+            .search-bar .btn {
+                width: 100%;
+                min-width: 0;
             }
 
             .product-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 1rem;
+            }
+
+            .panel-header {
+                flex-direction: column;
+            }
+
+            .cart-card {
+                top: 0;
+                overflow: visible;
+            }
+
+            .cart-summary {
+                overflow-x: auto;
+            }
+
+            .cart-table {
+                min-width: 560px;
+            }
+
+            #checkoutButton {
+                width: 100% !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 0.75rem;
+            }
+
+            .panel {
+                border-radius: 1rem;
+                padding: 0.85rem;
+            }
+
+            .product-card {
+                padding: 0.9rem;
+            }
+
+            .quantity-control {
+                gap: 0.3rem;
+            }
+
+            .quantity-control button {
+                width: 28px;
+                height: 28px;
             }
         }
     </style>

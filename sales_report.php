@@ -337,8 +337,13 @@ function buildQueryString(array $params): string
 
         .report-table {
             width: 100%;
-            border-collapse: collapse;
+            overflow-x: auto;
             margin-top: 1rem;
+        }
+
+        .report-table table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
         .report-table th,
@@ -384,9 +389,36 @@ function buildQueryString(array $params): string
         }
 
         @media (max-width: 768px) {
-            .main-content {
-                margin-left: 0;
+            .dashboard-container {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100% !important;
+                position: static !important;
+                height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+                box-shadow: none;
+            }
+
+            .sidebar-header {
                 padding: 1rem;
+            }
+
+            .sidebar-menu {
+                padding: 0.75rem;
+            }
+
+            .sidebar-menu a {
+                margin-bottom: 0.45rem;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                padding: 1rem;
+                width: 100%;
+                box-sizing: border-box;
             }
 
             .stats-grid,
@@ -394,6 +426,23 @@ function buildQueryString(array $params): string
             .search-bar {
                 grid-template-columns: 1fr;
                 flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-bar input,
+            .search-bar select,
+            .search-bar .btn,
+            .hero-actions .btn {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .panel {
+                padding: 1rem;
+            }
+
+            .report-table table {
+                min-width: 700px;
             }
         }
     </style>

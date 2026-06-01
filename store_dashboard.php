@@ -457,6 +457,7 @@ for ($i = 6; $i >= 0; $i--) {
 
             /* Override container */
             .dashboard-container {
+                display: block;
                 min-height: auto;
             }
 
@@ -526,6 +527,7 @@ for ($i = 6; $i >= 0; $i--) {
                 margin-left: 0 !important;
                 padding: 0.85rem !important;
                 width: 100%;
+                box-sizing: border-box;
             }
 
             /* Mobile Top Bar */

@@ -443,14 +443,60 @@ function buildQueryString(array $params): string
         }
 
         @media (max-width: 768px) {
-            .main-content {
-                margin-left: 0;
+            .dashboard-container {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100% !important;
+                position: static !important;
+                height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+                box-shadow: none;
+            }
+
+            .sidebar-header {
                 padding: 1rem;
+            }
+
+            .sidebar-menu {
+                padding: 0.75rem;
+            }
+
+            .sidebar-menu a {
+                margin-bottom: 0.45rem;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                padding: 1rem;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .hero-actions,
+            .search-bar {
+                flex-direction: column;
+                align-items: stretch;
             }
 
             .search-bar input,
             .search-bar select {
                 min-width: 100%;
+            }
+
+            .search-bar .btn,
+            .hero-actions .btn {
+                width: 100%;
+            }
+
+            .panel {
+                padding: 1rem;
+            }
+
+            .inventory-table table {
+                min-width: 680px;
             }
         }
     </style>
