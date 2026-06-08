@@ -1340,7 +1340,7 @@ function productStatusLabel(array $product): array
             updateBulkSelection();
         }
 
-        function submitBulkDelete() {
+        async function submitBulkDelete() {
             const selected = Array.from(document.querySelectorAll('.product-checkbox:checked')).map((checkbox) => checkbox.value);
             const inputsContainer = document.getElementById('bulkProductInputs');
             const bulkDeleteForm = document.getElementById('bulkDeleteForm');
@@ -1352,6 +1352,17 @@ function productStatusLabel(array $product): array
             inputsContainer.innerHTML = '';
 
             if (!selected.length) {
+                return;
+            }
+
+            if (window.AppUI && typeof window.AppUI.confirm === 'function') {
+                const confirmed = await window.AppUI.confirm(`Delete ${selected.length} selected product${selected.length === 1 ? '' : 's'}?`, {
+                    confirmText: 'Delete selected'
+                });
+                if (!confirmed) {
+                    return;
+                }
+            } else if (!confirm(`Delete ${selected.length} selected product${selected.length === 1 ? '' : 's'}?`)) {
                 return;
             }
 

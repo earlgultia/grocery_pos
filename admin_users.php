@@ -428,7 +428,7 @@ $csrfToken = generateCSRFToken();
                                         <td>
                                             <div class="row-actions">
                                                 <?php if ($managedUser['role'] === 'store_user'): ?>
-                                                    <form method="post" class="inline-form" action="admin_users.php">
+                                                    <form method="post" class="inline-form" action="admin_users.php" data-confirm="Deactivate this user account?" data-confirm-text="Deactivate">
                                                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
                                                         <input type="hidden" name="action" value="deactivate">
                                                         <input type="hidden" name="user_id" value="<?php echo (int) $managedUser['id']; ?>">

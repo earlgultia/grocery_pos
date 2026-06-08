@@ -96,25 +96,30 @@ function animateCounter(element, target) {
 }
 
 // Initialize counters when they come into view
-const observerOptions = {
-    threshold: 0.5
-};
+if ('IntersectionObserver' in window) {
+    const observerOptions = {
+        threshold: 0.5
+    };
 
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const element = entry.target;
-            const target = parseInt(element.getAttribute('data-count'));
-            animateCounter(element, target);
-            observer.unobserve(element);
-        }
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const element = entry.target;
+                const target = parseInt(element.getAttribute('data-count'), 10) || 0;
+                animateCounter(element, target);
+                observer.unobserve(element);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.stat-number').forEach(stat => {
+        observer.observe(stat);
     });
-}, observerOptions);
-
-// Observe all stat numbers
-document.querySelectorAll('.stat-number').forEach(stat => {
-    observer.observe(stat);
-});
+} else {
+    document.querySelectorAll('.stat-number').forEach(stat => {
+        stat.textContent = stat.getAttribute('data-count') || stat.textContent;
+    });
+}
 
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -178,37 +183,55 @@ class FormSecurity {
     }
     
     static showError(input, message) {
+        const parent = input.closest('.form-group') || input.parentElement;
+        if (!parent) return;
+        const errorId = `${input.id || input.name || 'field'}-error`;
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
+        errorDiv.id = errorId;
         errorDiv.textContent = message;
-        errorDiv.style.color = '#EF4444';
-        errorDiv.style.fontSize = '0.875rem';
-        errorDiv.style.marginTop = '0.25rem';
         
         // Remove existing error
-        const existingError = input.parentElement.querySelector('.error-message');
+        const existingError = parent.querySelector('.error-message');
         if (existingError) existingError.remove();
         
-        input.parentElement.appendChild(errorDiv);
-        input.style.borderColor = '#EF4444';
-        
-        setTimeout(() => {
-            errorDiv.remove();
-            input.style.borderColor = '';
-        }, 3000);
+        parent.appendChild(errorDiv);
+        input.setAttribute('aria-invalid', 'true');
+        input.setAttribute('aria-describedby', errorId);
     }
 }
 
 // Add loading state to buttons
-function addLoadingState(button) {
-    const originalText = button.textContent;
+function addLoadingState(button, text = 'Processing...') {
+    if (window.AppUI && typeof window.AppUI.setButtonLoading === 'function') {
+        return window.AppUI.setButtonLoading(button, text);
+    }
+
+    const originalHtml = button.innerHTML;
+    const originalDisabled = button.disabled;
+    button.dataset.loadingOriginalHtml = originalHtml;
+    button.dataset.loadingOriginalDisabled = String(originalDisabled);
     button.disabled = true;
-    button.innerHTML = '<span class="loading"></span> Loading...';
+    button.classList.add('is-loading');
+    button.setAttribute('aria-busy', 'true');
+    button.innerHTML = `<span class="loading" aria-hidden="true"></span><span>${text}</span>`;
     
     return function reset() {
-        button.disabled = false;
-        button.textContent = originalText;
+        button.disabled = originalDisabled;
+        button.classList.remove('is-loading');
+        button.removeAttribute('aria-busy');
+        button.innerHTML = originalHtml;
+        delete button.dataset.loadingOriginalHtml;
+        delete button.dataset.loadingOriginalDisabled;
     };
+}
+
+function showClientNotice(message, type = 'warning') {
+    if (window.AppUI && typeof window.AppUI.notify === 'function') {
+        window.AppUI.notify(message, type);
+        return;
+    }
+    alert(message);
 }
 
 // Handle form submissions securely
@@ -216,7 +239,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add CSRF protection to all forms
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
-        if (!form.querySelector('input[name="csrf_token"]')) {
+        const method = (form.getAttribute('method') || 'get').toLowerCase();
+        const isMutatingForm = method === 'post';
+
+        if (isMutatingForm && !form.querySelector('input[name="csrf_token"]')) {
             FormSecurity.addCSRFToken(form);
         }
         
@@ -228,14 +254,14 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Rate limiting check
             const formId = form.id || 'default_form';
-            if (!rateLimiter.checkLimit(formId)) {
+            if (isMutatingForm && !rateLimiter.checkLimit(formId)) {
                 e.preventDefault();
-                alert('Too many attempts. Please try again later.');
+                showClientNotice('Too many attempts. Please try again later.', 'warning');
                 return;
             }
             
             const submitButton = form.querySelector('button[type="submit"]');
-            if (submitButton) {
+            if (isMutatingForm && submitButton) {
                 const resetButton = addLoadingState(submitButton);
                 // Reset after form submission (in real implementation, this would be after response)
                 setTimeout(resetButton, 3000);
@@ -258,10 +284,23 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Remove error styling on input
         input.addEventListener('input', () => {
-            input.style.borderColor = '';
-            const error = input.parentElement.querySelector('.error-message');
+            input.removeAttribute('aria-invalid');
+            input.removeAttribute('aria-describedby');
+            const parent = input.closest('.form-group') || input.parentElement;
+            const error = parent?.querySelector('.error-message');
             if (error) error.remove();
         });
+    });
+});
+
+window.addEventListener('pageshow', () => {
+    document.querySelectorAll('.is-loading[data-loading-original-html]').forEach(button => {
+        button.innerHTML = button.dataset.loadingOriginalHtml;
+        button.disabled = button.dataset.loadingOriginalDisabled === 'true';
+        button.classList.remove('is-loading');
+        button.removeAttribute('aria-busy');
+        delete button.dataset.loadingOriginalHtml;
+        delete button.dataset.loadingOriginalDisabled;
     });
 });
 
@@ -367,23 +406,30 @@ function initLandingNavToggle() {
 document.addEventListener('DOMContentLoaded', initLandingNavToggle);
 
 // Lazy load images for performance
-const imageObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const img = entry.target;
-            const src = img.getAttribute('data-src');
-            if (src) {
-                img.src = src;
-                img.removeAttribute('data-src');
+if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                const src = img.getAttribute('data-src');
+                if (src) {
+                    img.src = src;
+                    img.removeAttribute('data-src');
+                }
+                imageObserver.unobserve(img);
             }
-            imageObserver.unobserve(img);
-        }
+        });
     });
-});
 
-document.querySelectorAll('img[data-src]').forEach(img => {
-    imageObserver.observe(img);
-});
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        imageObserver.observe(img);
+    });
+} else {
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        img.src = img.getAttribute('data-src');
+        img.removeAttribute('data-src');
+    });
+}
 
 // Add scroll effect to navbar
 let lastScroll = 0;

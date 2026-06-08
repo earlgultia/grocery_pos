@@ -706,6 +706,9 @@ function buildQueryString(array $params): string
                                 <select id="paymentMethod">
                                     <option value="cash">Cash</option>
                                     <option value="card">Card</option>
+                                    <option value="gcash">GCash</option>
+                                    <option value="maya">Maya</option>
+                                    <option value="bank_transfer">Bank transfer</option>
                                     <option value="other">Other</option>
                                 </select>
                             </div>
@@ -761,6 +764,8 @@ function buildQueryString(array $params): string
             if (cartItem) {
                 if (cartItem.quantity < stock) {
                     cartItem.quantity += 1;
+                } else {
+                    showMessage(`Only ${stock} ${unit} available for ${name}.`, 'warning');
                 }
             } else {
                 cartItem = {
@@ -782,6 +787,7 @@ function buildQueryString(array $params): string
             const subtotalDisplay = document.getElementById('subtotalDisplay');
             const totalDisplay = document.getElementById('totalDisplay');
             const changeDisplay = document.getElementById('changeDisplay');
+            const checkoutButton = document.getElementById('checkoutButton');
             const paymentReceived = parseFloat(document.getElementById('paymentReceived').value) || 0;
 
             if (cart.length === 0) {
@@ -789,7 +795,14 @@ function buildQueryString(array $params): string
                 subtotalDisplay.value = '$0.00';
                 totalDisplay.value = '$0.00';
                 changeDisplay.value = '$0.00';
+                if (checkoutButton) {
+                    checkoutButton.disabled = true;
+                }
                 return;
+            }
+
+            if (checkoutButton) {
+                checkoutButton.disabled = false;
             }
 
             cartBody.innerHTML = '';
@@ -851,6 +864,9 @@ function buildQueryString(array $params): string
             messageCard.textContent = message;
             messageCard.className = `message-card ${type}`;
             messageCard.style.display = 'block';
+            if (window.AppUI && typeof window.AppUI.notify === 'function') {
+                window.AppUI.notify(message, type);
+            }
         }
 
         async function completeSale() {
@@ -862,11 +878,16 @@ function buildQueryString(array $params): string
             const customerName = document.getElementById('customerName').value.trim() || 'Walk-in customer';
             const paymentReceived = parseFloat(document.getElementById('paymentReceived').value) || 0;
             const paymentMethod = document.getElementById('paymentMethod').value;
+            const checkoutButton = document.getElementById('checkoutButton');
+            const resetLoading = window.AppUI && typeof window.AppUI.setButtonLoading === 'function'
+                ? window.AppUI.setButtonLoading(checkoutButton, 'Completing sale...')
+                : () => {};
             const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
             const totalAmount = subtotal;
             const changeAmount = Math.max(0, paymentReceived - totalAmount);
 
             if (paymentReceived < totalAmount) {
+                resetLoading();
                 showMessage('Payment received must cover the total amount.', 'error');
                 return;
             }
@@ -916,6 +937,9 @@ function buildQueryString(array $params): string
                 document.getElementById('paymentReceived').value = '0';
             } catch (error) {
                 showMessage(error.message || 'Unable to complete the sale. Please try again.', 'error');
+            } finally {
+                resetLoading();
+                renderCart();
             }
         }
 
