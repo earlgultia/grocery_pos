@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'includes/functions.php';
 require_once 'includes/db_connect.php';
 
@@ -130,352 +130,37 @@ function buildQueryString(array $params): string
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --app-text: #0f172a;
-            --app-muted: #475569;
-            --app-surface: rgba(255, 255, 255, 0.86);
-            --app-border: rgba(15, 23, 42, 0.10);
-            --app-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background:
-                radial-gradient(circle at top left, rgba(79, 70, 229, 0.12), transparent 30%),
-                radial-gradient(circle at top right, rgba(16, 185, 129, 0.10), transparent 26%),
-                linear-gradient(180deg, #eef2ff 0%, #f8fafc 45%, #eef2ff 100%);
-            color: var(--app-text);
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: linear-gradient(rgba(255,255,255,0.45) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.45) 1px, transparent 1px);
-            background-size: 38px 38px;
-            mask-image: linear-gradient(180deg, rgba(0,0,0,0.14), transparent 85%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: linear-gradient(180deg, #0f172a 0%, #111827 42%, #1e293b 100%);
-            color: #fff;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            box-shadow: 16px 0 40px rgba(15, 23, 42, 0.20);
-        }
-
-        .sidebar-header {
-            padding: 1.55rem 1.4rem 1.25rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.10);
-        }
-
-        .sidebar-header h3 {
-            margin: 0;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: -0.03em;
-            color: #fff;
-        }
-
-        .sidebar-header p {
-            margin: 0.35rem 0 0;
-            font-size: 0.86rem;
-            color: rgba(255,255,255,0.82);
-        }
-
-        .sidebar-status {
-            margin-top: 0.95rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            padding: 0.42rem 0.72rem;
-            border-radius: 999px;
-            background: rgba(79, 70, 229, 0.14);
-            color: #e0e7ff;
-            border: 1px solid rgba(129, 140, 248, 0.24);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-        }
-
-        .sidebar-menu {
-            padding: 0.85rem 0.75rem 1rem;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 0.75rem;
-            padding: 0.9rem 0.95rem;
-            margin-bottom: 0.25rem;
-            border-radius: 1rem;
-            color: rgba(255,255,255,0.92);
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-            font-weight: 600;
-        }
-
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.28), rgba(34, 197, 94, 0.16));
-            border-color: rgba(129, 140, 248, 0.24);
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
-        }
-
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 1.75rem;
-            min-width: 0;
-        }
-
-        .page-shell {
-            display: grid;
-            gap: 1.25rem;
-        }
-
-        .panel,
-        .message-card {
-            background: var(--app-surface);
-            backdrop-filter: blur(14px);
-            border: 1px solid var(--app-border);
-            box-shadow: var(--app-shadow);
-            border-radius: 1.2rem;
-        }
-
-        .panel {
-            padding: 1.2rem;
-        }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .panel-header h2,
-        .section-title {
-            margin: 0;
-            font-family: 'Space Grotesk', sans-serif;
-            color: var(--app-text);
-            letter-spacing: -0.03em;
-        }
-
-        .panel-header p,
-        .section-subtitle {
-            margin: 0.35rem 0 0;
-            color: var(--app-muted);
-            line-height: 1.55;
-        }
-
-        .hero-actions,
-        .search-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            align-items: center;
-        }
-
-        .search-bar input,
-        .search-bar select {
-            min-width: 190px;
-            padding: 0.85rem 1rem;
-            border-radius: 0.95rem;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            background: rgba(255,255,255,0.96);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 1rem;
-        }
-
-        .stat-card {
-            padding: 1.1rem;
-        }
-
-        .stat-card .label {
-            display: block;
-            color: var(--app-muted);
-            font-size: 0.75rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            margin-bottom: 0.35rem;
-        }
-
-        .stat-card .value {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--app-text);
-        }
-
-        .chart-card {
-            padding: 1rem;
-        }
-
-        .chart-card canvas {
-            width: 100% !important;
-            height: auto !important;
-        }
-
-        .report-table {
-            width: 100%;
-            overflow-x: auto;
-            margin-top: 1rem;
-        }
-
-        .report-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .report-table th,
-        .report-table td {
-            padding: 0.95rem 0.8rem;
-            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-            text-align: left;
-            vertical-align: top;
-        }
-
-        .report-table th {
-            background: rgba(79, 70, 229, 0.06);
-            color: var(--app-text);
-            font-size: 0.84rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.35rem 0.65rem;
-            border-radius: 999px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: capitalize;
-        }
-
-        .badge-success { background: rgba(34, 197, 94, 0.12); color: #166534; }
-        .badge-warning { background: rgba(245, 158, 11, 0.12); color: #92400e; }
-        .badge-danger { background: rgba(239, 68, 68, 0.12); color: #991b1b; }
-
-        .page-meta {
-            color: var(--app-muted);
-            font-size: 0.95rem;
-        }
-
-        @media (max-width: 1100px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            .dashboard-container {
-                display: block;
-            }
-
-            .sidebar {
-                width: 100% !important;
-                position: static !important;
-                height: auto !important;
-                max-height: none !important;
-                overflow: visible !important;
-                box-shadow: none;
-            }
-
-            .sidebar-header {
-                padding: 1rem;
-            }
-
-            .sidebar-menu {
-                padding: 0.75rem;
-            }
-
-            .sidebar-menu a {
-                margin-bottom: 0.45rem;
-            }
-
-            .main-content {
-                margin-left: 0 !important;
-                padding: 1rem;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .stats-grid,
-            .hero-actions,
-            .search-bar {
-                grid-template-columns: 1fr;
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .search-bar input,
-            .search-bar select,
-            .search-bar .btn,
-            .hero-actions .btn {
-                width: 100%;
-                min-width: 0;
-            }
-
-            .panel {
-                padding: 1rem;
-            }
-
-            .report-table table {
-                min-width: 700px;
-            }
-        }
-    </style>
+    
 </head>
 <body>
     <div class="dashboard-container">
         <div class="sidebar">
             <div class="sidebar-header">
-                <h3>🛒 <?php echo htmlspecialchars($store['store_name']); ?></h3>
+                <h3>ðŸ›’ <?php echo htmlspecialchars($store['store_name']); ?></h3>
                 <p><?php echo htmlspecialchars($user['name']); ?></p>
-                <div class="sidebar-status">📅 <?php echo date('F j, Y'); ?> · Sales</div>
+                <div class="sidebar-status">ðŸ“… <?php echo date('F j, Y'); ?> Â· Sales</div>
             </div>
             <div class="sidebar-menu">
                 <a href="store_dashboard.php">
-                    <span>📊</span> Dashboard
+                    <span>ðŸ“Š</span> Dashboard
                 </a>
                 <a href="pos.php">
-                    <span>💰</span> Point of Sale
+                    <span>ðŸ’°</span> Point of Sale
                 </a>
                 <a href="products_management.php">
-                    <span>📦</span> Products
+                    <span>ðŸ“¦</span> Products
                 </a>
                 <a href="inventory.php">
-                    <span>📋</span> Inventory
+                    <span>ðŸ“‹</span> Inventory
                 </a>
                 <a href="sales_report.php" class="active">
-                    <span>📈</span> Sales Report
+                    <span>ðŸ“ˆ</span> Sales Report
                 </a>
                 <a href="profile.php">
-                    <span>👤</span> Profile
+                    <span>ðŸ‘¤</span> Profile
                 </a>
                 <a href="logout.php">
-                    <span>🚪</span> Logout
+                    <span>ðŸšª</span> Logout
                 </a>
             </div>
         </div>
@@ -548,7 +233,7 @@ function buildQueryString(array $params): string
                     </div>
                     <div class="stats-grid">
                         <?php if (empty($paymentMethods)): ?>
-                            <div class="stat-card" style="grid-column: 1 / -1; text-align:center; color:#64748b;">No payment activity for the selected filters.</div>
+                            <div class="stat-card empty-state">No payment activity for the selected filters.</div>
                         <?php else: ?>
                             <?php foreach ($paymentMethods as $method): ?>
                                 <div class="stat-card">
@@ -582,12 +267,12 @@ function buildQueryString(array $params): string
                             <tbody>
                                 <?php if (empty($transactions)): ?>
                                     <tr>
-                                        <td colspan="6" style="text-align:center; color:#64748b; padding:1.5rem;">No transactions found.</td>
+                                        <td colspan="6" class="empty-state-cell">No transactions found.</td>
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($transactions as $transaction): ?>
                                         <tr>
-                                            <td><?php echo htmlspecialchars($transaction['invoice_number'] ?? '—'); ?></td>
+                                            <td><?php echo htmlspecialchars($transaction['invoice_number'] ?? 'â€”'); ?></td>
                                             <td><?php echo htmlspecialchars($transaction['customer_name'] ?: 'Walk-in customer'); ?></td>
                                             <td><?php echo htmlspecialchars(ucfirst($transaction['payment_method'])); ?></td>
                                             <td><span class="badge badge-<?php echo $transaction['status'] === 'completed' ? 'success' : 'warning'; ?>"><?php echo htmlspecialchars(ucfirst($transaction['status'])); ?></span></td>
@@ -649,3 +334,4 @@ function buildQueryString(array $params): string
     <script src="js/app-nav.js"></script>
 </body>
 </html>
+

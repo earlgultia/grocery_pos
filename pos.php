@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'includes/functions.php';
 require_once 'includes/db_connect.php';
 
@@ -92,528 +92,37 @@ function buildQueryString(array $params): string
     <title>Point of Sale - <?php echo htmlspecialchars($store['store_name']); ?></title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --app-text: #0f172a;
-            --app-muted: #475569;
-            --app-surface: rgba(255, 255, 255, 0.90);
-            --app-border: rgba(15, 23, 42, 0.12);
-            --app-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
-            --brand-blue: #4f46e5;
-            --brand-green: #22c55e;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background:
-                radial-gradient(circle at top left, rgba(79, 70, 229, 0.12), transparent 30%),
-                radial-gradient(circle at top right, rgba(16, 185, 129, 0.10), transparent 26%),
-                linear-gradient(180deg, #eef2ff 0%, #f8fafc 45%, #eef2ff 100%);
-            color: var(--app-text);
-            margin: 0;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: linear-gradient(rgba(255,255,255,0.42) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.42) 1px, transparent 1px);
-            background-size: 38px 38px;
-            mask-image: linear-gradient(180deg, rgba(0,0,0,0.14), transparent 85%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: linear-gradient(180deg, #0f172a 0%, #111827 44%, #1e293b 100%);
-            color: #fff;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            box-shadow: 16px 0 40px rgba(15, 23, 42, 0.22);
-        }
-
-        .sidebar-header {
-            padding: 1.7rem 1.4rem 1.3rem;
-            border-bottom: 1px solid rgba(255,255,255,0.10);
-        }
-
-        .sidebar-header h3 {
-            margin: 0;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: -0.03em;
-            color: #fff;
-        }
-
-        .sidebar-header p {
-            margin: 0.4rem 0 0;
-            font-size: 0.88rem;
-            color: rgba(255,255,255,0.78);
-        }
-
-        .sidebar-status {
-            margin-top: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.45rem 0.75rem;
-            border-radius: 999px;
-            background: rgba(79, 70, 229, 0.16);
-            color: #e0e7ff;
-            border: 1px solid rgba(129, 140, 248, 0.20);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-        }
-
-        .sidebar-menu {
-            padding: 1rem 0.85rem 1.25rem;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            gap: 0.9rem;
-            padding: 0.95rem 1rem;
-            margin-bottom: 0.35rem;
-            border-radius: 1.1rem;
-            color: rgba(255,255,255,0.92);
-            text-decoration: none;
-            transition: all 0.18s ease;
-            border: 1px solid transparent;
-            font-weight: 600;
-        }
-
-        .sidebar-menu a span {
-            width: 34px;
-            height: 34px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.9rem;
-            background: rgba(255,255,255,0.08);
-        }
-
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.28), rgba(34, 197, 94, 0.16));
-            border-color: rgba(129, 140, 248, 0.24);
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
-        }
-
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 1.75rem;
-            min-width: 0;
-        }
-
-        .page-shell {
-            display: grid;
-            gap: 1.35rem;
-        }
-
-        .panel {
-            background: var(--app-surface);
-            backdrop-filter: blur(14px);
-            border: 1px solid var(--app-border);
-            box-shadow: var(--app-shadow);
-            border-radius: 1.25rem;
-            padding: 1.25rem;
-        }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .panel-header h2 {
-            margin: 0;
-            font-family: 'Space Grotesk', sans-serif;
-            color: var(--app-text);
-            letter-spacing: -0.03em;
-            font-size: 1.35rem;
-        }
-
-        .panel-header p {
-            margin: 0.35rem 0 0;
-            color: var(--app-muted);
-            line-height: 1.7;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.85rem 1.2rem;
-            border-radius: 999px;
-            text-decoration: none;
-            font-weight: 700;
-            border: 0;
-            cursor: pointer;
-            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--brand-blue), #4338ca);
-            color: #fff;
-            box-shadow: 0 14px 30px rgba(79, 70, 229, 0.16);
-        }
-
-        .btn-outline {
-            background: rgba(255,255,255,0.96);
-            color: var(--app-text);
-            border: 1px solid rgba(15, 23, 42, 0.12);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: #fff;
-            box-shadow: 0 14px 30px rgba(239, 68, 68, 0.16);
-        }
-
-        .search-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .search-bar input,
-        .search-bar select {
-            min-width: 200px;
-            padding: 0.95rem 1rem;
-            border-radius: 1rem;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            background: rgba(255,255,255,0.96);
-            color: var(--app-text);
-            font-size: 0.95rem;
-        }
-
-        .layout-grid {
-            display: grid;
-            grid-template-columns: 1.45fr 0.95fr;
-            gap: 1.25rem;
-            align-items: start;
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 1rem;
-        }
-
-        .product-card {
-            border-radius: 1.2rem;
-            background: rgba(255,255,255,0.98);
-            border: 1px solid rgba(15, 23, 42, 0.08);
-            padding: 1.1rem;
-            display: grid;
-            gap: 1rem;
-            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-        }
-
-        .product-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-            border-color: rgba(79, 70, 229, 0.16);
-        }
-
-        .product-card h3 {
-            margin: 0;
-            font-size: 1.03rem;
-            color: var(--app-text);
-        }
-
-        .product-meta,
-        .product-status {
-            color: var(--app-muted);
-            font-size: 0.88rem;
-            margin: 0.22rem 0;
-            line-height: 1.5;
-        }
-
-        .product-card .badge {
-            margin-top: 0.2rem;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.35rem 0.75rem;
-            border-radius: 999px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: capitalize;
-        }
-
-        .badge-success { background: rgba(34, 197, 94, 0.12); color: #166534; }
-        .badge-warning { background: rgba(245, 158, 11, 0.14); color: #92400e; }
-        .badge-danger { background: rgba(239, 68, 68, 0.12); color: #991b1b; }
-
-        .cart-card {
-            display: grid;
-            gap: 1rem;
-            position: sticky;
-            top: 1.75rem;
-            align-self: start;
-            max-height: calc(100vh - 3.5rem);
-            overflow: auto;
-        }
-
-        .cart-card .panel-header {
-            margin-bottom: 0.75rem;
-        }
-
-        .cart-summary {
-            display: grid;
-            gap: 0.85rem;
-        }
-
-        .cart-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 100%;
-        }
-
-        .cart-table th,
-        .cart-table td {
-            padding: 0.95rem 0.85rem;
-            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-            text-align: left;
-            vertical-align: middle;
-        }
-
-        .cart-table th {
-            background: rgba(79, 70, 229, 0.06);
-            color: var(--app-text);
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        .cart-table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .product-name {
-            font-weight: 700;
-            color: var(--app-text);
-            margin-bottom: 0.2rem;
-        }
-
-        .quantity-control {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            background: rgba(15, 23, 42, 0.04);
-            padding: 0.35rem 0.45rem;
-            border-radius: 0.9rem;
-        }
-
-        .quantity-control button {
-            width: 30px;
-            height: 30px;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            border-radius: 0.75rem;
-            background: #fff;
-            cursor: pointer;
-            font-weight: 700;
-            color: var(--app-text);
-        }
-
-        .checkout-field {
-            display: grid;
-            gap: 0.5rem;
-        }
-
-        .checkout-field label {
-            font-weight: 700;
-            color: var(--app-text);
-        }
-
-        .checkout-field input,
-        .checkout-field select {
-            width: 100%;
-            padding: 0.95rem 1rem;
-            border-radius: 1rem;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            background: rgba(255,255,255,0.96);
-            color: var(--app-text);
-            font-size: 0.95rem;
-        }
-
-        .message-card {
-            padding: 1rem 1.1rem;
-            border-radius: 1rem;
-            border: 1px solid transparent;
-            color: #0f172a;
-            font-weight: 600;
-            display: none;
-        }
-
-        .message-card.success { border-color: rgba(34, 197, 94, 0.18); background: rgba(34, 197, 94, 0.08); }
-        .message-card.error { border-color: rgba(239, 68, 68, 0.18); background: rgba(239, 68, 68, 0.08); }
-
-        @media (max-width: 1100px) {
-            .layout-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .cart-card {
-                position: static;
-                max-height: none;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .dashboard-container {
-                display: block;
-            }
-
-            .sidebar {
-                width: 100% !important;
-                position: static !important;
-                height: auto !important;
-                max-height: none !important;
-                overflow: visible !important;
-                box-shadow: none;
-            }
-
-            .sidebar-header {
-                padding: 1rem;
-            }
-
-            .sidebar-menu {
-                padding: 0.75rem;
-            }
-
-            .sidebar-menu a {
-                margin-bottom: 0.45rem;
-            }
-
-            .main-content {
-                margin-left: 0 !important;
-                padding: 1rem;
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .search-bar,
-            .hero-actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .search-bar input,
-            .search-bar select,
-            .search-bar .btn {
-                width: 100%;
-                min-width: 0;
-            }
-
-            .product-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .panel {
-                padding: 1rem;
-            }
-
-            .panel-header {
-                flex-direction: column;
-            }
-
-            .cart-card {
-                top: 0;
-                overflow: visible;
-            }
-
-            .cart-summary {
-                overflow-x: auto;
-            }
-
-            .cart-table {
-                min-width: 560px;
-            }
-
-            #checkoutButton {
-                width: 100% !important;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .main-content {
-                padding: 0.75rem;
-            }
-
-            .panel {
-                border-radius: 1rem;
-                padding: 0.85rem;
-            }
-
-            .product-card {
-                padding: 0.9rem;
-            }
-
-            .quantity-control {
-                gap: 0.3rem;
-            }
-
-            .quantity-control button {
-                width: 28px;
-                height: 28px;
-            }
-        }
-    </style>
+    
 </head>
 <body>
     <div class="dashboard-container">
         <div class="sidebar">
             <div class="sidebar-header">
-                <h3>🛒 <?php echo htmlspecialchars($store['store_name']); ?></h3>
+                <h3>ðŸ›’ <?php echo htmlspecialchars($store['store_name']); ?></h3>
                 <p><?php echo htmlspecialchars($user['name']); ?></p>
-                <div class="sidebar-status">📅 <?php echo date('F j, Y'); ?> · POS</div>
+                <div class="sidebar-status">ðŸ“… <?php echo date('F j, Y'); ?> Â· POS</div>
             </div>
             <div class="sidebar-menu">
                 <a href="store_dashboard.php">
-                    <span>📊</span> Dashboard
+                    <span>ðŸ“Š</span> Dashboard
                 </a>
                 <a href="pos.php" class="active">
-                    <span>💰</span> Point of Sale
+                    <span>ðŸ’°</span> Point of Sale
                 </a>
                 <a href="products_management.php">
-                    <span>📦</span> Products
+                    <span>ðŸ“¦</span> Products
                 </a>
                 <a href="inventory.php">
-                    <span>📋</span> Inventory
+                    <span>ðŸ“‹</span> Inventory
                 </a>
                 <a href="sales_report.php">
-                    <span>📈</span> Sales Report
+                    <span>ðŸ“ˆ</span> Sales Report
                 </a>
                 <a href="profile.php">
-                    <span>👤</span> Profile
+                    <span>ðŸ‘¤</span> Profile
                 </a>
                 <a href="logout.php">
-                    <span>🚪</span> Logout
+                    <span>ðŸšª</span> Logout
                 </a>
             </div>
         </div>
@@ -644,7 +153,7 @@ function buildQueryString(array $params): string
                         <section>
                             <div class="product-grid">
                                 <?php if (empty($products)): ?>
-                                    <div class="product-card" style="grid-column: 1 / -1; text-align:center; color:#64748b;">
+                                    <div class="product-card empty-state">
                                         <p>No products are available for sale right now.</p>
                                     </div>
                                 <?php else: ?>
@@ -653,13 +162,13 @@ function buildQueryString(array $params): string
                                         <article class="product-card" data-product-id="<?php echo (int)$product['id']; ?>" data-name="<?php echo htmlspecialchars($product['name'], ENT_QUOTES); ?>" data-price="<?php echo number_format((float)$product['price'], 2, '.', ''); ?>" data-quantity="<?php echo (int)$product['quantity']; ?>" data-unit="<?php echo htmlspecialchars($product['unit'], ENT_QUOTES); ?>" data-category="<?php echo htmlspecialchars($product['category'], ENT_QUOTES); ?>" data-expiration-date="<?php echo htmlspecialchars($product['expiration_date'], ENT_QUOTES); ?>">
                                             <div>
                                                 <h3><?php echo htmlspecialchars($product['name']); ?></h3>
-                                                <p class="product-meta"><?php echo htmlspecialchars($product['category']); ?> · <?php echo htmlspecialchars($product['unit']); ?></p>
+                                                <p class="product-meta"><?php echo htmlspecialchars($product['category']); ?> Â· <?php echo htmlspecialchars($product['unit']); ?></p>
                                                 <p class="product-meta">Stock: <?php echo (int)$product['quantity']; ?></p>
                                                 <p class="product-meta">Price: $<?php echo number_format((float)$product['price'], 2); ?></p>
                                             </div>
                                             <div>
                                                 <span class="badge badge-<?php echo $statusClass; ?>"><?php echo $statusLabel; ?></span>
-                                                <p class="product-meta" style="margin-top:0.75rem;">Expiry: <?php echo !empty($product['expiration_date']) ? htmlspecialchars($product['expiration_date']) : 'N/A'; ?></p>
+                                                <p class="product-meta spaced">Expiry: <?php echo !empty($product['expiration_date']) ? htmlspecialchars($product['expiration_date']) : 'N/A'; ?></p>
                                                 <button type="button" class="btn btn-primary" onclick="addToCart(this.closest('.product-card'))">Add to cart</button>
                                             </div>
                                         </article>
@@ -676,7 +185,7 @@ function buildQueryString(array $params): string
                                 </div>
                             </div>
 
-                            <div id="posMessage" class="message-card" style="display:none;"></div>
+                            <div id="posMessage" class="message-card"></div>
 
                             <div class="cart-summary">
                                 <table class="cart-table" id="cartTable">
@@ -691,7 +200,7 @@ function buildQueryString(array $params): string
                                     </thead>
                                     <tbody id="cartBody">
                                         <tr>
-                                            <td colspan="5" style="text-align:center; color:#64748b; padding:1.25rem;">Add products to the cart to begin.</td>
+                                            <td colspan="5" class="empty-state-cell">Add products to the cart to begin.</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -728,7 +237,7 @@ function buildQueryString(array $params): string
                                 <label>Change</label>
                                 <input type="text" id="changeDisplay" readonly value="$0.00">
                             </div>
-                            <button type="button" class="btn btn-primary" id="checkoutButton" onclick="completeSale()" style="width:100%;">Complete sale</button>
+                            <button type="button" class="btn btn-primary btn-block" id="checkoutButton" onclick="completeSale()">Complete sale</button>
                         </aside>
                     </div>
                 </section>
@@ -791,7 +300,7 @@ function buildQueryString(array $params): string
             const paymentReceived = parseFloat(document.getElementById('paymentReceived').value) || 0;
 
             if (cart.length === 0) {
-                cartBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#64748b; padding:1.25rem;">Add products to the cart to begin.</td></tr>';
+                cartBody.innerHTML = '<tr><td colspan="5" class="empty-state-cell">Add products to the cart to begin.</td></tr>';
                 subtotalDisplay.value = '$0.00';
                 totalDisplay.value = '$0.00';
                 changeDisplay.value = '$0.00';
@@ -948,3 +457,4 @@ function buildQueryString(array $params): string
     <script src="js/app-nav.js"></script>
 </body>
 </html>
+

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'includes/functions.php';
 require_once 'includes/db_connect.php';
 
@@ -117,284 +117,37 @@ $csrfToken = generateCSRFToken();
     <title>Profile - <?php echo htmlspecialchars($store['store_name']); ?></title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(180deg, #eef2ff 0%, #f8fafc 45%, #eef2ff 100%);
-            color: #0f172a;
-        }
-
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: linear-gradient(180deg, #0f172a 0%, #111827 42%, #1e293b 100%);
-            color: #fff;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            box-shadow: 16px 0 40px rgba(15, 23, 42, 0.20);
-        }
-
-        .sidebar-header {
-            padding: 1.55rem 1.4rem 1.25rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.10);
-        }
-
-        .sidebar-header h3 {
-            margin: 0;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: -0.03em;
-            color: #fff;
-        }
-
-        .sidebar-header p {
-            margin: 0.35rem 0 0;
-            font-size: 0.86rem;
-            color: rgba(255,255,255,0.82);
-        }
-
-        .sidebar-status {
-            margin-top: 0.95rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            padding: 0.42rem 0.72rem;
-            border-radius: 999px;
-            background: rgba(79, 70, 229, 0.14);
-            color: #e0e7ff;
-            border: 1px solid rgba(129, 140, 248, 0.24);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-        }
-
-        .sidebar-menu {
-            padding: 0.85rem 0.75rem 1rem;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 0.75rem;
-            padding: 0.9rem 0.95rem;
-            margin-bottom: 0.25rem;
-            border-radius: 1rem;
-            color: rgba(255,255,255,0.92);
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-            font-weight: 600;
-        }
-
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.28), rgba(34, 197, 94, 0.16));
-            border-color: rgba(129, 140, 248, 0.24);
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
-        }
-
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 1.75rem;
-        }
-
-        .page-shell {
-            display: grid;
-            gap: 1.25rem;
-            max-width: 1120px;
-            margin: 0 auto;
-        }
-
-        .panel {
-            background: rgba(255,255,255,0.86);
-            border: 1px solid rgba(15, 23, 42, 0.10);
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-            border-radius: 1.2rem;
-            padding: 1.5rem;
-        }
-
-        .panel h2 {
-            margin: 0 0 0.5rem;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
-            color: #0f172a;
-        }
-
-        .panel p {
-            margin: 0;
-            color: #475569;
-        }
-
-        .profile-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.25rem;
-        }
-
-        .profile-card,
-        .form-card {
-            padding: 1.35rem;
-            border-radius: 1.1rem;
-            background: #ffffff;
-            border: 1px solid rgba(15, 23, 42, 0.08);
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #475569;
-            font-weight: 600;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 0.95rem 1rem;
-            border-radius: 0.85rem;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            background: #f8fafc;
-            color: #0f172a;
-            font-size: 1rem;
-        }
-
-        .password-input-wrap {
-            position: relative;
-        }
-
-        .password-input-wrap input {
-            width: 100%;
-            box-sizing: border-box;
-            padding-right: 3.9rem;
-        }
-
-        .toggle-password {
-            position: absolute;
-            top: 50%;
-            right: 0.7rem;
-            transform: translateY(-50%);
-            border: 1px solid rgba(15, 23, 42, 0.14);
-            background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
-            color: #334155;
-            cursor: pointer;
-            width: 2.2rem;
-            height: 2.2rem;
-            line-height: 0;
-            padding: 0;
-            display: grid;
-            place-items: center;
-            border-radius: 0.7rem;
-            box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
-            transition: all 0.2s ease;
-        }
-
-        .toggle-password svg {
-            width: 1.1rem;
-            height: 1.1rem;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .toggle-password:hover {
-            color: #0f172a;
-            background: #ffffff;
-            transform: translateY(-50%) scale(1.03);
-        }
-
-        .toggle-password.is-visible {
-            color: #1d4ed8;
-            border-color: rgba(37, 99, 235, 0.28);
-            background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
-        }
-
-        .form-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            align-items: center;
-            margin-top: 1rem;
-        }
-
-        .status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.55rem 0.9rem;
-            border-radius: 999px;
-            background: rgba(16, 185, 129, 0.12);
-            color: #0f766e;
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        .message {
-            padding: 1rem 1.1rem;
-            border-radius: 0.95rem;
-            font-weight: 600;
-        }
-
-        .message.success {
-            background: rgba(22, 163, 74, 0.12);
-            color: #166534;
-            border: 1px solid rgba(22, 163, 74, 0.18);
-        }
-
-        .message.error {
-            background: rgba(239, 68, 68, 0.12);
-            color: #991b1b;
-            border: 1px solid rgba(239, 68, 68, 0.18);
-        }
-
-        @media (max-width: 960px) {
-            .profile-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    
 </head>
 <body>
     <div class="dashboard-container">
         <div class="sidebar">
             <div class="sidebar-header">
-                <h3>🛒 <?php echo htmlspecialchars($store['store_name']); ?></h3>
+                <h3>ðŸ›’ <?php echo htmlspecialchars($store['store_name']); ?></h3>
                 <p><?php echo htmlspecialchars($user['name']); ?></p>
-                <div class="sidebar-status">👤 Profile</div>
+                <div class="sidebar-status">ðŸ‘¤ Profile</div>
             </div>
             <div class="sidebar-menu">
                 <a href="store_dashboard.php">
-                    <span>📊</span> Dashboard
+                    <span>ðŸ“Š</span> Dashboard
                 </a>
                 <a href="pos.php">
-                    <span>💰</span> Point of Sale
+                    <span>ðŸ’°</span> Point of Sale
                 </a>
                 <a href="products_management.php">
-                    <span>📦</span> Products
+                    <span>ðŸ“¦</span> Products
                 </a>
                 <a href="inventory.php">
-                    <span>📋</span> Inventory
+                    <span>ðŸ“‹</span> Inventory
                 </a>
                 <a href="sales_report.php">
-                    <span>📈</span> Sales Report
+                    <span>ðŸ“ˆ</span> Sales Report
                 </a>
                 <a href="profile.php" class="active">
-                    <span>👤</span> Profile
+                    <span>ðŸ‘¤</span> Profile
                 </a>
                 <a href="logout.php">
-                    <span>🚪</span> Logout
+                    <span>ðŸšª</span> Logout
                 </a>
             </div>
         </div>
@@ -420,21 +173,21 @@ $csrfToken = generateCSRFToken();
                     <div class="profile-card">
                         <h2>Account overview</h2>
                         <p>View your login email, role, and store settings.</p>
-                        <div style="margin-top:1.5rem; display:grid; gap:1rem;">
-                            <div>
-                                <div style="font-size:0.85rem;color:#64748b;">Name</div>
-                                <div style="font-weight:700;font-size:1rem;"><?php echo htmlspecialchars($user['name']); ?></div>
+                        <div class="detail-grid">
+                            <div class="detail-row">
+                                <div class="detail-label">Name</div>
+                                <div class="detail-value"><?php echo htmlspecialchars($user['name']); ?></div>
                             </div>
-                            <div>
-                                <div style="font-size:0.85rem;color:#64748b;">Email</div>
-                                <div style="font-weight:700;font-size:1rem;"><?php echo htmlspecialchars($user['email']); ?></div>
+                            <div class="detail-row">
+                                <div class="detail-label">Email</div>
+                                <div class="detail-value"><?php echo htmlspecialchars($user['email']); ?></div>
                             </div>
-                            <div>
-                                <div style="font-size:0.85rem;color:#64748b;">Store</div>
-                                <div style="font-weight:700;font-size:1rem;"><?php echo htmlspecialchars($store['store_name']); ?></div>
+                            <div class="detail-row">
+                                <div class="detail-label">Store</div>
+                                <div class="detail-value"><?php echo htmlspecialchars($store['store_name']); ?></div>
                             </div>
-                            <div>
-                                <div style="font-size:0.85rem;color:#64748b;">Role</div>
+                            <div class="detail-row">
+                                <div class="detail-label">Role</div>
                                 <div class="status-pill"><?php echo htmlspecialchars(str_replace('_', ' ', ucfirst($user['role']))); ?></div>
                             </div>
                         </div>
@@ -462,10 +215,10 @@ $csrfToken = generateCSRFToken();
                             </div>
 
                             <div class="form-group password-field">
-                                <label for="password">New password <span style="font-weight:400;color:#94a3b8;">(optional)</span></label>
+                                <label for="password">New password <span class="form-note">(optional)</span></label>
                                 <div class="password-input-wrap">
                                     <input id="password" name="password" type="password" placeholder="Leave blank to keep current password">
-                                    <button type="button" class="toggle-password" data-target="password" aria-label="Toggle password visibility">👁️</button>
+                                    <button type="button" class="toggle-password" data-target="password" aria-label="Toggle password visibility">ðŸ‘ï¸</button>
                                 </div>
                             </div>
 
@@ -473,7 +226,7 @@ $csrfToken = generateCSRFToken();
                                 <label for="confirm_password">Confirm new password</label>
                                 <div class="password-input-wrap">
                                     <input id="confirm_password" name="confirm_password" type="password" placeholder="Repeat new password">
-                                    <button type="button" class="toggle-password" data-target="confirm_password" aria-label="Toggle password visibility">👁️</button>
+                                    <button type="button" class="toggle-password" data-target="confirm_password" aria-label="Toggle password visibility">ðŸ‘ï¸</button>
                                 </div>
                             </div>
 
@@ -524,3 +277,4 @@ $csrfToken = generateCSRFToken();
     <script src="js/app-nav.js"></script>
 </body>
 </html>
+

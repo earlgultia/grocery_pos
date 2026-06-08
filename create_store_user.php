@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'includes/functions.php';
 require_once 'includes/db_connect.php';
 
@@ -213,3 +213,4 @@ $csrfToken = generateCSRFToken();
 </body>
     
 </html>
+

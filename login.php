@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'includes/functions.php';
 require_once 'includes/db_connect.php';
 ensureDefaultDemoAccount();
@@ -64,7 +64,7 @@ $csrf_token = generateCSRFToken();
         <section class="auth-card">
             <div class="auth-panel">
                 <div class="auth-brand">
-                    <div class="auth-brand-badge">🛒</div>
+                    <div class="auth-brand-badge">ðŸ›’</div>
                     <div>
                         <p class="auth-eyebrow"><?php echo SITE_NAME; ?></p>
                         <h1>Welcome back</h1>
@@ -90,7 +90,7 @@ $csrf_token = generateCSRFToken();
                         <label>Password</label>
                         <div class="password-input-wrap">
                             <input id="login_password" type="password" name="password" required class="form-input" placeholder="Your password">
-                            <button type="button" class="toggle-password" data-target="login_password" aria-label="Show password">👁️</button>
+                            <button type="button" class="toggle-password" data-target="login_password" aria-label="Show password">ðŸ‘ï¸</button>
                         </div>
                     </div>
                     

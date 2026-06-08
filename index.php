@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'includes/functions.php';
 require_once 'includes/db_connect.php';
 
@@ -31,7 +31,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo SITE_NAME; ?> — Modern Grocery POS & Store Management</title>
+    <title><?php echo SITE_NAME; ?> â€” Modern Grocery POS & Store Management</title>
     <meta name="description" content="Complete POS system for grocery stores. Manage inventory, track sales, and handle transactions efficiently.">
     <link rel="stylesheet" href="css/style.css?v=<?php echo filemtime(__DIR__ . '/css/style.css'); ?>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -41,7 +41,7 @@ try {
     <header class="landing-topbar">
         <div class="container">
             <div class="landing-brand-row">
-                <div class="landing-brand-mark">🍞</div>
+                <div class="landing-brand-mark">ðŸž</div>
                 <div class="landing-brand-text">
                     <h1>GroceryPOS</h1>
                     <p>Modern grocery management</p>
@@ -74,14 +74,14 @@ try {
     <section class="hero">
         <div class="container">
             <div class="hero-content landing-hero-copy">
-                <div class="landing-hero-badge">Faster checkout · Smarter inventory</div>
+                <div class="landing-hero-badge">Faster checkout Â· Smarter inventory</div>
                 <h1 class="animate-fade-in">
                     Point-of-Sale built for
                     <span class="highlight">local grocery stores</span>
                 </h1>
                 <p class="animate-fade-in-delay">
                     Powerful, easy-to-use POS that helps you manage stock, speed up checkout,
-                    and get instant sales insights — all from one dashboard.
+                    and get instant sales insights â€” all from one dashboard.
                 </p>
                 <div class="hero-buttons animate-fade-in-delay-2">
                     <a href="login.php" class="btn btn-large btn-primary">Sign in to your account</a>
@@ -131,32 +131,32 @@ try {
             </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">📦</div>
+                    <div class="feature-icon">ðŸ“¦</div>
                     <h3>Inventory Management</h3>
                     <p>Track stock levels, set low stock alerts, and manage product expiration dates automatically.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">💳</div>
+                    <div class="feature-icon">ðŸ’³</div>
                     <h3>Fast Checkout</h3>
                     <p>Quick and easy checkout process with support for multiple payment methods.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">📊</div>
+                    <div class="feature-icon">ðŸ“Š</div>
                     <h3>Real-time Reports</h3>
                     <p>Get instant insights into sales, profits, and inventory with detailed analytics.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🏪</div>
+                    <div class="feature-icon">ðŸª</div>
                     <h3>Multi-store Support</h3>
                     <p>Manage multiple store locations from a single dashboard.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">📱</div>
+                    <div class="feature-icon">ðŸ“±</div>
                     <h3>Mobile Friendly</h3>
                     <p>Access your POS system from any device - desktop, tablet, or mobile.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
+                    <div class="feature-icon">ðŸ”’</div>
                     <h3>Secure & Reliable</h3>
                     <p>Bank-level security with encrypted data and secure authentication.</p>
                 </div>
@@ -201,25 +201,25 @@ try {
             <div class="pricing-grid">
                 <div class="pricing-card">
                     <h3>Basic</h3>
-                    <div class="price">₱499<span>/month</span></div>
+                    <div class="price">â‚±499<span>/month</span></div>
                     <ul>
-                        <li>✓ Up to 500 products</li>
-                        <li>✓ Single store</li>
-                        <li>✓ Basic reports</li>
-                        <li>✓ Email support</li>
+                        <li>âœ“ Up to 500 products</li>
+                        <li>âœ“ Single store</li>
+                        <li>âœ“ Basic reports</li>
+                        <li>âœ“ Email support</li>
                     </ul>
                     <a href="login.php" class="btn btn-outline">Get Started</a>
                 </div>
                 <div class="pricing-card popular">
                     <div class="popular-badge">Most Popular</div>
                     <h3>Professional</h3>
-                    <div class="price">₱2,000<span>/3 months</span></div>
+                    <div class="price">â‚±2,000<span>/3 months</span></div>
                     <ul>
-                        <li>✓ Unlimited products</li>
-                        <li>✓ Up to 5 stores</li>
-                        <li>✓ Advanced analytics</li>
-                        <li>✓ Priority support</li>
-                        <li>✓ API access</li>
+                        <li>âœ“ Unlimited products</li>
+                        <li>âœ“ Up to 5 stores</li>
+                        <li>âœ“ Advanced analytics</li>
+                        <li>âœ“ Priority support</li>
+                        <li>âœ“ API access</li>
                     </ul>
                     <a href="login.php" class="btn btn-primary">Get Started</a>
                 </div>
@@ -227,10 +227,10 @@ try {
                     <h3>Enterprise</h3>
                     <div class="price">Custom</div>
                     <ul>
-                        <li>✓ Unlimited everything</li>
-                        <li>✓ Custom features</li>
-                        <li>✓ Dedicated support</li>
-                        <li>✓ On-premise option</li>
+                        <li>âœ“ Unlimited everything</li>
+                        <li>âœ“ Custom features</li>
+                        <li>âœ“ Dedicated support</li>
+                        <li>âœ“ On-premise option</li>
                     </ul>
                     <a href="#contact" class="btn btn-outline">Contact Us</a>
                 </div>
@@ -312,9 +312,9 @@ try {
                 <div class="footer-section">
                     <h4>Connect With Us</h4>
                     <div class="social-links">
-                        <a href="#">📘 Facebook</a>
-                        <a href="#">🐦 Twitter</a>
-                        <a href="#">📸 Instagram</a>
+                        <a href="#">ðŸ“˜ Facebook</a>
+                        <a href="#">ðŸ¦ Twitter</a>
+                        <a href="#">ðŸ“¸ Instagram</a>
                     </div>
                 </div>
             </div>

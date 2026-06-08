@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require_once 'includes/functions.php';
 require_once 'includes/db_connect.php';
 
@@ -292,743 +292,37 @@ function productStatusLabel(array $product): array
     <title>Products - <?php echo htmlspecialchars($store['store_name']); ?></title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --app-text: #0f172a;
-            --app-muted: #475569;
-            --app-surface: rgba(255, 255, 255, 0.86);
-            --app-border: rgba(15, 23, 42, 0.10);
-            --app-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background:
-                radial-gradient(circle at top left, rgba(79, 70, 229, 0.12), transparent 30%),
-                radial-gradient(circle at top right, rgba(16, 185, 129, 0.10), transparent 26%),
-                linear-gradient(180deg, #eef2ff 0%, #f8fafc 45%, #eef2ff 100%);
-            color: var(--app-text);
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: linear-gradient(rgba(255,255,255,0.45) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.45) 1px, transparent 1px);
-            background-size: 38px 38px;
-            mask-image: linear-gradient(180deg, rgba(0,0,0,0.14), transparent 85%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: linear-gradient(180deg, #0f172a 0%, #111827 42%, #1e293b 100%);
-            color: #fff;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            box-shadow: 16px 0 40px rgba(15, 23, 42, 0.20);
-        }
-
-        .sidebar-header {
-            padding: 1.55rem 1.4rem 1.25rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.10);
-        }
-
-        .sidebar-header h3 {
-            margin: 0;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: -0.03em;
-            color: #fff;
-        }
-
-        .sidebar-header p {
-            margin: 0.35rem 0 0;
-            font-size: 0.86rem;
-            color: rgba(255,255,255,0.82);
-        }
-
-        .sidebar-status {
-            margin-top: 0.95rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            padding: 0.42rem 0.72rem;
-            border-radius: 999px;
-            background: rgba(79, 70, 229, 0.14);
-            color: #e0e7ff;
-            border: 1px solid rgba(129, 140, 248, 0.24);
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-        }
-
-        .sidebar-menu {
-            padding: 0.85rem 0.75rem 1rem;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 0.75rem;
-            padding: 0.9rem 0.95rem;
-            margin-bottom: 0.25rem;
-            border-radius: 1rem;
-            color: rgba(255,255,255,0.92);
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-            font-weight: 600;
-        }
-
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.28), rgba(34, 197, 94, 0.16));
-            border-color: rgba(129, 140, 248, 0.24);
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
-        }
-
-        .sidebar-menu a span {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 1.6rem;
-        }
-
-        .sidebar-footer {
-            margin: 0.5rem 0.75rem 0.9rem;
-            padding: 0.95rem;
-            border-radius: 1rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .sidebar-footer-label {
-            font-size: 0.72rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.82);
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        .sidebar-footer-actions {
-            display: grid;
-            gap: 0.45rem;
-        }
-
-        .sidebar-footer-actions a {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.7rem 0.8rem;
-            border-radius: 0.85rem;
-            text-decoration: none;
-            color: rgba(255,255,255,0.96);
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            font-size: 0.88rem;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        .sidebar-footer-actions a:hover {
-            background: rgba(255,255,255,0.12);
-            transform: translateX(2px);
-        }
-
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 1.75rem;
-            min-width: 0;
-        }
-
-        .page-shell {
-            display: grid;
-            gap: 1.25rem;
-        }
-
-        .page-hero,
-        .panel,
-        .stats-card,
-        .message-card {
-            background: var(--app-surface);
-            backdrop-filter: blur(14px);
-            border: 1px solid var(--app-border);
-            box-shadow: var(--app-shadow);
-            border-radius: 1.2rem;
-        }
-
-        .page-hero {
-            padding: 1.4rem;
-            display: grid;
-            grid-template-columns: 1.3fr 0.7fr;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .hero-kicker {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0.85rem;
-            border-radius: 999px;
-            background: rgba(79, 70, 229, 0.08);
-            color: #4338ca;
-            font-weight: 700;
-            font-size: 0.82rem;
-        }
-
-        .page-hero h1 {
-            margin: 0.85rem 0 0.35rem;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(1.7rem, 3vw, 2.45rem);
-            letter-spacing: -0.04em;
-            color: var(--app-text);
-        }
-
-        .page-hero p {
-            margin: 0;
-            color: var(--app-muted);
-            line-height: 1.65;
-        }
-
-        .hero-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.7rem;
-            margin-top: 1rem;
-        }
-
-        .hero-stats {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.75rem;
-        }
-
-        .hero-stat {
-            padding: 0.95rem;
-            border-radius: 1rem;
-            background: rgba(255,255,255,0.76);
-            border: 1px solid rgba(15, 23, 42, 0.08);
-        }
-
-        .hero-stat span {
-            display: block;
-        }
-
-        .hero-stat .label {
-            color: var(--app-muted);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 0.25rem;
-        }
-
-        .hero-stat .value {
-            color: var(--app-text);
-            font-weight: 800;
-            font-size: 1.15rem;
-        }
-
-        .message-card {
-            padding: 1rem 1.1rem;
-            color: #0f172a;
-            font-weight: 600;
-        }
-
-        .message-card.success { border-color: rgba(34, 197, 94, 0.18); background: rgba(34, 197, 94, 0.08); }
-        .message-card.error { border-color: rgba(239, 68, 68, 0.18); background: rgba(239, 68, 68, 0.08); }
-
-        .layout-grid {
-            display: grid;
-            grid-template-columns: 0.95fr 1.05fr;
-            gap: 1.25rem;
-            align-items: start;
-        }
-
-        .panel {
-            padding: 1.2rem;
-        }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .panel-header h2,
-        .section-title {
-            margin: 0;
-            font-family: 'Space Grotesk', sans-serif;
-            color: var(--app-text);
-            letter-spacing: -0.03em;
-        }
-
-        .panel-header p,
-        .section-subtitle {
-            margin: 0.35rem 0 0;
-            color: var(--app-muted);
-            line-height: 1.55;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.9rem;
-        }
-
-        .form-group {
-            display: grid;
-            gap: 0.45rem;
-        }
-
-        .form-group.full {
-            grid-column: 1 / -1;
-        }
-
-        .form-group label {
-            font-weight: 700;
-            color: var(--app-text);
-            font-size: 0.92rem;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 0.9rem 1rem;
-            border-radius: 0.95rem;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            background: rgba(255,255,255,0.96);
-            color: var(--app-text);
-            outline: none;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: rgba(79, 70, 229, 0.45);
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
-        }
-
-        .form-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.7rem;
-            margin-top: 1rem;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.8rem 1.1rem;
-            border-radius: 999px;
-            text-decoration: none;
-            font-weight: 700;
-            border: 0;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #4f46e5, #4338ca);
-            color: #fff;
-            box-shadow: 0 12px 24px rgba(79, 70, 229, 0.18);
-        }
-
-        .btn-outline {
-            background: rgba(255,255,255,0.92);
-            color: var(--app-text);
-            border: 1px solid rgba(15, 23, 42, 0.12);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: #fff;
-            box-shadow: 0 12px 24px rgba(239, 68, 68, 0.16);
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .section-toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .search-bar {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .search-bar input,
-        .search-bar select {
-            min-width: 220px;
-            padding: 0.85rem 1rem;
-            border-radius: 0.95rem;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            background: rgba(255,255,255,0.96);
-        }
-
-        .table-toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .bulk-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-        }
-
-        .page-meta {
-            color: var(--app-muted);
-            font-size: 0.95rem;
-        }
-
-        .pagination {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            align-items: center;
-        }
-
-        .pagination a {
-            padding: 0.65rem 0.95rem;
-            border-radius: 0.95rem;
-            color: var(--app-text);
-            text-decoration: none;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            background: rgba(255,255,255,0.94);
-        }
-
-        .pagination a.active {
-            background: rgba(79, 70, 229, 0.16);
-            border-color: rgba(79, 70, 229, 0.24);
-            font-weight: 700;
-        }
-
-        .checkbox-cell {
-            width: 56px;
-            text-align: center;
-        }
-
-        .product-checkbox {
-            width: 16px;
-            height: 16px;
-        }
-
-        .products-table {
-            width: 100%;
-            overflow-x: auto;
-        }
-
-        .products-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .products-table th,
-        .products-table td {
-            padding: 0.85rem 0.75rem;
-            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-            text-align: left;
-            vertical-align: top;
-        }
-
-        .products-table th {
-            background: rgba(79, 70, 229, 0.06);
-            color: var(--app-text);
-            font-size: 0.84rem;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-        }
-
-        .product-name {
-            font-weight: 800;
-            color: var(--app-text);
-        }
-
-        .product-meta,
-        .product-subtle {
-            color: var(--app-muted);
-            font-size: 0.88rem;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.35rem 0.65rem;
-            border-radius: 999px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: capitalize;
-        }
-
-        .badge-success { background: rgba(34, 197, 94, 0.12); color: #166534; }
-        .badge-warning { background: rgba(245, 158, 11, 0.12); color: #92400e; }
-        .badge-danger { background: rgba(239, 68, 68, 0.12); color: #991b1b; }
-
-        .action-group {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .action-group a,
-        .action-group button {
-            padding: 0.55rem 0.85rem;
-            border-radius: 0.8rem;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            background: #fff;
-            text-decoration: none;
-            color: var(--app-text);
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .action-group button {
-            background: rgba(239, 68, 68, 0.08);
-            color: #b91c1c;
-            border-color: rgba(239, 68, 68, 0.18);
-        }
-
-        .quick-grid {
-            display: grid;
-            gap: 0.75rem;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .quick-card {
-            padding: 1rem;
-            border-radius: 1rem;
-            background: rgba(255,255,255,0.76);
-            border: 1px solid rgba(15, 23, 42, 0.08);
-        }
-
-        .quick-card span {
-            display: block;
-        }
-
-        .quick-card .label {
-            color: var(--app-muted);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-bottom: 0.25rem;
-        }
-
-        .quick-card .value {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: var(--app-text);
-        }
-
-        .category-dropdown-wrapper {
-            position: relative;
-        }
-
-        .category-dropdown-panel {
-            position: absolute;
-            top: calc(100% + 0.75rem);
-            left: 0;
-            right: 0;
-            z-index: 50;
-            background: #ffffff;
-            border-radius: 1rem;
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
-            padding: 1rem 1rem 0.85rem;
-            min-width: 320px;
-        }
-
-        .category-dropdown-panel::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 24px;
-            width: 16px;
-            height: 16px;
-            background: #ffffff;
-            transform: rotate(45deg);
-            border-left: 1px solid rgba(15, 23, 42, 0.12);
-            border-top: 1px solid rgba(15, 23, 42, 0.12);
-            z-index: -1;
-        }
-
-        .category-dropdown-panel .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .category-dropdown-panel .modal-header h3 {
-            margin: 0;
-            font-size: 1rem;
-            color: var(--app-text);
-        }
-
-        .category-dropdown-panel .modal-close {
-            border: none;
-            background: transparent;
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--app-text);
-            cursor: pointer;
-        }
-
-        .category-dropdown-panel .category-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 0.65rem;
-        }
-
-        .category-dropdown-panel .category-chip {
-            width: 100%;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .modal-header h3 {
-            margin: 0;
-            font-size: 1.2rem;
-            color: var(--app-text);
-        }
-
-        .modal-close {
-            border: none;
-            background: transparent;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--app-text);
-            cursor: pointer;
-        }
-
-        .category-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 0.75rem;
-        }
-
-        .category-chip {
-            border: 1px solid rgba(79, 70, 229, 0.18);
-            background: rgba(79, 70, 229, 0.08);
-            color: #3730a3;
-            padding: 0.85rem 1rem;
-            border-radius: 999px;
-            cursor: pointer;
-            font-weight: 700;
-            transition: transform 0.2s ease, background 0.2s ease;
-        }
-
-        .category-chip:hover {
-            transform: translateY(-1px);
-            background: rgba(79, 70, 229, 0.14);
-        }
-
-        @media (max-width: 1100px) {
-            .layout-grid,
-            .page-hero {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s;
-                z-index: 1000;
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding: 1rem;
-            }
-
-            .form-grid,
-            .quick-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .search-bar input,
-            .search-bar select {
-                min-width: 100%;
-            }
-
-            .hero-stats {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    
 </head>
 <body>
     <div class="dashboard-container">
         <div class="sidebar">
             <div class="sidebar-header">
-                <h3>🛒 <?php echo htmlspecialchars($store['store_name']); ?></h3>
+                <h3>ðŸ›’ <?php echo htmlspecialchars($store['store_name']); ?></h3>
                 <p><?php echo htmlspecialchars($user['name']); ?></p>
-                <div class="sidebar-status">📅 <?php echo date('F j, Y'); ?> · Products</div>
+                <div class="sidebar-status">ðŸ“… <?php echo date('F j, Y'); ?> Â· Products</div>
             </div>
             <div class="sidebar-menu">
                 <a href="store_dashboard.php">
-                    <span>📊</span> Dashboard
+                    <span>ðŸ“Š</span> Dashboard
                 </a>
                 <a href="pos.php">
-                    <span>💰</span> Point of Sale
+                    <span>ðŸ’°</span> Point of Sale
                 </a>
                 <a href="products_management.php" class="active">
-                    <span>📦</span> Products
+                    <span>ðŸ“¦</span> Products
                 </a>
                 <a href="inventory.php">
-                    <span>📋</span> Inventory
+                    <span>ðŸ“‹</span> Inventory
                 </a>
                 <a href="sales_report.php">
-                    <span>📈</span> Sales Report
+                    <span>ðŸ“ˆ</span> Sales Report
                 </a>
                 <a href="profile.php">
-                    <span>👤</span> Profile
+                    <span>ðŸ‘¤</span> Profile
                 </a>
                 <a href="logout.php">
-                    <span>🚪</span> Logout
+                    <span>ðŸšª</span> Logout
                 </a>
             </div>
             <div class="sidebar-footer">
@@ -1036,11 +330,11 @@ function productStatusLabel(array $product): array
                 <div class="sidebar-footer-actions">
                     <a href="pos.php">
                         <span>Open POS</span>
-                        <span>↗</span>
+                        <span>â†—</span>
                     </a>
                     <a href="store_dashboard.php">
                         <span>View dashboard</span>
-                        <span>↗</span>
+                        <span>â†—</span>
                     </a>
                 </div>
             </div>
@@ -1107,15 +401,15 @@ function productStatusLabel(array $product): array
                                 </div>
                                 <div class="form-group category-dropdown-wrapper">
                                     <label>Category</label>
-                                    <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;position:relative;">
-                                        <input id="categoryInput" type="text" name="category" required value="<?php echo htmlspecialchars($editingProduct['category'] ?? ''); ?>" placeholder="Dairy" style="flex:1;">
-                                        <button type="button" class="btn btn-outline" onclick="toggleCategoryDropdown()">Choose</button>
-                                        <div id="categoryModal" class="category-dropdown-panel" style="display:none;">
+                                    <div class="category-field">
+                                        <input id="categoryInput" type="text" name="category" required value="<?php echo htmlspecialchars($editingProduct['category'] ?? ''); ?>" placeholder="Dairy">
+                                        <button type="button" class="btn btn-outline category-toggle" onclick="toggleCategoryDropdown()">Choose</button>
+                                        <div id="categoryModal" class="category-dropdown-panel">
                                             <div class="modal-header">
                                                 <h3>Choose category</h3>
                                                 <button type="button" class="modal-close" onclick="closeCategoryDropdown()">×</button>
                                             </div>
-                                            <p style="margin:0 0 1rem;color:#64748b;">Select a category or type a custom one.</p>
+                                            <p class="form-note">Select a category or type a custom one.</p>
                                             <div class="category-list">
                                                 <?php foreach ($categoryChoices as $choice): ?>
                                                     <button type="button" class="category-chip" onclick="selectCategory('<?php echo htmlspecialchars($choice, ENT_QUOTES); ?>')"><?php echo htmlspecialchars($choice); ?></button>
@@ -1217,7 +511,7 @@ function productStatusLabel(array $product): array
                                 <input type="hidden" name="page" value="<?php echo $page; ?>">
                                 <div id="bulkProductInputs"></div>
                                 <button type="button" class="btn btn-danger" id="bulkDeleteButton" disabled onclick="submitBulkDelete()">Delete selected</button>
-                                <span id="bulkSelectionCount" style="color: var(--app-muted);">0 selected</span>
+                                <span id="bulkSelectionCount" class="form-note">0 selected</span>
                             </form>
                         </div>
                         <div class="page-meta">
@@ -1245,7 +539,7 @@ function productStatusLabel(array $product): array
                             <tbody>
                                 <?php if (empty($products)): ?>
                                     <tr>
-                                        <td colspan="8" style="text-align:center; color:#64748b; padding: 1.5rem;">No products found.</td>
+                                        <td colspan="8" class="empty-state-cell">No products found.</td>
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($products as $product): ?>
@@ -1266,7 +560,7 @@ function productStatusLabel(array $product): array
                                             <td>
                                                 <div class="action-group">
                                                     <a href="products_management.php?edit=<?php echo (int)$product['id']; ?><?php echo (buildQueryString(['q' => $search, 'category' => $categoryFilter, 'status' => $statusFilter, 'page' => $page]) ? '&' . buildQueryString(['q' => $search, 'category' => $categoryFilter, 'status' => $statusFilter, 'page' => $page]) : ''); ?>">Edit</a>
-                                                    <form method="post" action="products_management.php" onsubmit="return confirm('Delete this product?');" style="display:inline;">
+                                                    <form method="post" action="products_management.php" onsubmit="return confirm('Delete this product?');" class="inline-form">
                                                         <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
                                                         <input type="hidden" name="action" value="delete_product">
                                                         <input type="hidden" name="product_id" value="<?php echo (int)$product['id']; ?>">
@@ -1424,3 +718,4 @@ function productStatusLabel(array $product): array
     <script src="js/app-nav.js"></script>
 </body>
 </html>
+
